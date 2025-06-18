@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer base {
+  :root {
+    /* IGUDAR Brand Colors */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 264 89% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220 8.9% 46.1%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 264 89% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 264 89% 50%;
+    --chart-1: 264 89% 50%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    
+    /* IGUDAR Specific Variables */
+    --igudar-primary: 264 89% 50%;
+    --igudar-primary-dark: 264 89% 45%;
+    --igudar-primary-light: 264 89% 60%;
+    --igudar-background: 0 0% 100%;
+    --igudar-text: 0 0% 0%;
+    --igudar-text-secondary: 220 8.9% 46.1%;
+    --igudar-text-muted: 220 5.2% 47.8%;
+    --igudar-text-light: 220 5.9% 42.2%;
+  }
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 264 89% 58%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 264 89% 58%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 264 89% 58%;
+    --chart-1: 264 89% 58%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    
+    /* IGUDAR Dark Mode Variables */
+    --igudar-primary: 264 89% 58%;
+    --igudar-primary-dark: 264 89% 50%;
+    --igudar-primary-light: 264 89% 65%;
+    --igudar-background: 224 71.4% 4.1%;
+    --igudar-text: 210 20% 98%;
+    --igudar-text-secondary: 217.9 10.6% 64.9%;
+    --igudar-text-muted: 215 20.2% 65.1%;
+    --igudar-text-light: 215 16.3% 56.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* IGUDAR Custom Utilities */
+@layer utilities {
+  .text-igudar-primary {
+    color: hsl(var(--igudar-primary));
+  }
+  .bg-igudar-primary {
+    background-color: hsl(var(--igudar-primary));
+  }
+  .border-igudar-primary {
+    border-color: hsl(var(--igudar-primary));
+  }
+  .text-igudar-secondary {
+    color: hsl(var(--igudar-text-secondary));
+  }
+  .text-igudar-muted {
+    color: hsl(var(--igudar-text-muted));
+  }
+  .text-igudar-light {
+    color: hsl(var(--igudar-text-light));
+  }
+}
