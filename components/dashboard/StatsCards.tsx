@@ -30,8 +30,7 @@ export const StatsCards: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchStats = async () => {
+  const fetchStats = async () => {
       if (!user?.id) {
         setLoading(false);
         return;
@@ -54,11 +53,22 @@ export const StatsCards: React.FC = () => {
       } finally {
         setLoading(false);
       }
-    };
+  };
 
+  useEffect(() => {
     fetchStats();
   }, [user?.id]);
 
+  // Refresh data every 30 seconds to ensure fresh data
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (user?.id) {
+        fetchStats();
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [user?.id]);
   // Format currency
   const formatCurrency = (amount: number): string => {
     if (amount === 0) return '0 MAD';

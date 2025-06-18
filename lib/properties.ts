@@ -1,4 +1,5 @@
 import { supabase, handleSupabaseError } from './supabase';
+import { revalidatePath } from 'next/cache';
 import {
 	Property,
 	PropertyInsert,
@@ -278,6 +279,15 @@ export class PropertyService {
 				};
 			}
 
+			// Revalidate relevant paths after successful update
+			try {
+				revalidatePath('/properties');
+				revalidatePath('/dashboard');
+				revalidatePath('/investments');
+				revalidatePath('/portfolio');
+			} catch (revalidateError) {
+				console.error('Error revalidating paths:', revalidateError);
+			}
 			return {
 				success: true,
 				data,

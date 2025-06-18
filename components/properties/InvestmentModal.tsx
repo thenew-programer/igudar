@@ -132,9 +132,12 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
         
         // Simulate payment processing
         setTimeout(() => {
+          // Trigger data refresh in parent components
           if (onSuccess) {
             onSuccess();
           }
+          // Force refresh of current page data
+          window.location.reload();
           handleClose();
         }, 3000);
       } else {

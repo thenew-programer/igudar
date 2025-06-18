@@ -24,6 +24,7 @@ interface InvestmentListProps {
   showFilters?: boolean;
   title?: string;
   className?: string;
+  onDataRefresh?: () => Promise<void>;
 }
 
 export const InvestmentList: React.FC<InvestmentListProps> = ({
@@ -31,7 +32,8 @@ export const InvestmentList: React.FC<InvestmentListProps> = ({
   onFiltersChange,
   showFilters = true,
   title = "Your Investments",
-  className = ''
+  className = '',
+  onDataRefresh
 }) => {
   const [filters, setFilters] = useState<InvestmentFilters>({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -118,6 +120,10 @@ export const InvestmentList: React.FC<InvestmentListProps> = ({
   const clearAllFilters = () => {
     setFilters({});
     setSearchTerm('');
+    // Refresh data when clearing filters
+    if (onDataRefresh) {
+      onDataRefresh();
+    }
     if (onFiltersChange) {
       onFiltersChange({});
     }

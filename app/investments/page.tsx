@@ -29,8 +29,7 @@ export default function InvestmentsPage() {
   const [filters, setFilters] = useState<InvestmentFilters>({});
   const [activeTab, setActiveTab] = useState<'overview' | 'investments' | 'performance'>('overview');
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
       if (!user?.id) {
         setLoading(false);
         return;
@@ -66,8 +65,9 @@ export default function InvestmentsPage() {
       } finally {
         setLoading(false);
       }
-    };
+  };
 
+  useEffect(() => {
     fetchData();
   }, [user?.id, filters]);
 
@@ -263,6 +263,7 @@ export default function InvestmentsPage() {
               investments={investments}
               onFiltersChange={handleFiltersChange}
               showFilters={true}
+              onDataRefresh={fetchData}
             />
           </TabsContent>
 
