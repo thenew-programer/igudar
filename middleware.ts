@@ -6,12 +6,10 @@ export async function middleware(req: NextRequest) {
 	const res = NextResponse.next();
 	const supabase = createMiddlewareClient({ req, res });
 
-	// Refresh session if expired - required for Server Components
 	const {
 		data: { session },
 	} = await supabase.auth.getSession();
 
-	// Protected routes that require authentication
 	const protectedRoutes = ['/dashboard', '/properties', '/investments', '/portfolio', '/profile', '/settings', '/security', '/help', '/billing'];
 	const authRoutes = ['/auth/login', '/auth/register'];
 
@@ -22,18 +20,15 @@ export async function middleware(req: NextRequest) {
 		req.nextUrl.pathname.startsWith(route)
 	);
 
-	// Redirect unauthenticated users from protected routes to login
 	if (isProtectedRoute && !session) {
 		const redirectUrl = new URL('/auth/login', req.url);
 		redirectUrl.searchParams.set('redirectTo', req.nextUrl.pathname);
 		return NextResponse.redirect(redirectUrl);
 	}
 
-	// Redirect authenticated users from auth routes to dashboard
 	if (isAuthRoute && session) {
 		let redirectTo = req.nextUrl.searchParams.get('redirectTo') || '/dashboard';
 
-		// Prevent redirect loop: if redirectTo is an auth route, use dashboard instead
 		if (authRoutes.some(route => redirectTo.startsWith(route))) {
 			redirectTo = '/dashboard';
 		}
@@ -41,7 +36,6 @@ export async function middleware(req: NextRequest) {
 		return NextResponse.redirect(new URL(redirectTo, req.url));
 	}
 
-	// Handle root path redirect
 	if (req.nextUrl.pathname === '/') {
 		if (session) {
 			return NextResponse.redirect(new URL('/dashboard', req.url));
