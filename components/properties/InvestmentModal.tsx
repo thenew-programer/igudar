@@ -28,13 +28,15 @@ interface InvestmentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  prefilledAmount?: string;
 }
 
 export const InvestmentModal: React.FC<InvestmentModalProps> = ({
   property,
   isOpen,
   onClose,
-  onSuccess
+  onSuccess,
+  prefilledAmount = ''
 }) => {
   const { user } = useAuth();
   const [investmentAmount, setInvestmentAmount] = useState<string>('');
@@ -42,6 +44,13 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [step, setStep] = useState<'calculate' | 'confirm' | 'payment'>('calculate');
+
+  // Set prefilled amount when modal opens
+  useEffect(() => {
+    if (isOpen && prefilledAmount) {
+      setInvestmentAmount(prefilledAmount);
+    }
+  }, [isOpen, prefilledAmount]);
 
   if (!property) return null;
 
@@ -377,14 +386,6 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
               {step === 'confirm' && 'Confirm Investment'}
               {step === 'payment' && 'Investment Complete'}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClose}
-              disabled={isProcessing}
-            >
-              <X className="h-4 w-4" />
-            </Button>
           </div>
         </DialogHeader>
 

@@ -39,6 +39,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
     total: number;
   }>({ monthly: 0, annual: 0, total: 0 });
   const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
+  const [prefilledAmount, setPrefilledAmount] = useState<string>('');
 
   // Format price in MAD
   const formatPrice = (price: number): string => {
@@ -156,6 +157,8 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
       window.location.href = '/auth/login';
       return;
     }
+    // Set the prefilled amount from the calculator
+    setPrefilledAmount(investmentAmount);
     setIsInvestmentModalOpen(true);
   };
 
@@ -391,6 +394,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
         isOpen={isInvestmentModalOpen}
         onClose={() => setIsInvestmentModalOpen(false)}
         onSuccess={handleInvestmentSuccess}
+        prefilledAmount={prefilledAmount}
       />
     </>
   );
