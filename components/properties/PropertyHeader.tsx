@@ -136,7 +136,7 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
   };
 
   const handleInvestmentSuccess = () => {
-    window.location.reload(true);
+    window.location.reload();
   };
 
   return (
