@@ -92,6 +92,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   const minInvestmentMAD = Math.max(property.min_investment / 100, 1000); // Ensure minimum 1000 MAD
   const totalRaisedMAD = property.total_raised / 100;
   const targetAmountMAD = property.target_amount / 100;
+  const remainingFundingMAD = targetAmountMAD - totalRaisedMAD;
 
   const handleViewDetails = () => {
     if (onViewDetails) {
@@ -159,6 +160,10 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-sm text-igudar-text-secondary">Min. Investment</span>
             <span className="font-medium text-igudar-text">{formatPrice(minInvestmentMAD)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-igudar-text-secondary">Remaining</span>
+            <span className="font-medium text-igudar-text">{formatPrice(remainingFundingMAD)}</span>
           </div>
         </div>
 

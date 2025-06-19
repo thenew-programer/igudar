@@ -51,7 +51,11 @@ export const InvestmentCard: React.FC<InvestmentCardProps> = ({
 
   const performance = calculatePerformance();
   const investmentAmountMAD = investment.investment_amount / 100; // Convert from cents
-  const pricePerShareMAD = investment.purchase_price_per_share / 100; // Convert from cents
+  
+  // Calculate investment percentage
+  const investmentPercentage = property && property.target_amount > 0 
+    ? (investment.investment_amount / property.target_amount) * 100 
+    : 0;
 
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -114,12 +118,14 @@ export const InvestmentCard: React.FC<InvestmentCardProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-igudar-text-secondary">Shares Owned</span>
-              <span className="font-semibold text-igudar-text">{investment.shares_purchased.toLocaleString()}</span>
+              <span className="text-sm text-igudar-text-secondary">Investment %</span>
+              <span className="font-semibold text-igudar-text">{investmentPercentage.toFixed(2)}%</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-igudar-text-secondary">Price per Share</span>
-              <span className="font-semibold text-igudar-text">{formatInvestmentAmountShort(pricePerShareMAD)}</span>
+              <span className="text-sm text-igudar-text-secondary">Target Amount</span>
+              <span className="font-semibold text-igudar-text">
+                {property ? formatInvestmentAmountShort(property.target_amount / 100) : 'N/A'}
+              </span>
             </div>
           </div>
           <div className="space-y-2">

@@ -116,11 +116,11 @@ export const StatsCards: React.FC = () => {
       },
       {
         title: 'Number of Properties',
-        value: data.totalProperties.toString(),
-        change: data.totalProperties > 0 ? `+${data.totalProperties}` : '0',
+        value: `${data.totalPercentage.toFixed(1)}%`,
+        change: data.totalPercentage > 0 ? `${data.totalProperties} properties` : '0 properties',
         changeType: 'positive',
         icon: PieChart,
-        description: 'Total properties in your investment portfolio'
+        description: 'Total ownership percentage across all properties'
       },
     ];
   };
@@ -184,11 +184,11 @@ export const StatsCards: React.FC = () => {
       },
       {
         title: 'Number of Properties',
-        value: '0',
-        change: '0',
+        value: '0%',
+        change: '0 properties',
         changeType: 'positive',
         icon: PieChart,
-        description: 'Diversify across multiple properties'
+        description: 'Total ownership percentage across all properties'
       },
     ];
 

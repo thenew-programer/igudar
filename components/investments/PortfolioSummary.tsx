@@ -178,12 +178,9 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ summary }) =
                 <Building2 className="h-6 w-6 text-blue-600" />
               </div>
               <div className="text-2xl font-bold text-igudar-text">
-                {summary.total_properties > 0 
-                  ? (summary.total_shares / summary.total_properties).toFixed(0)
-                  : '0'
-                }
+                {summary.total_percentage.toFixed(1)}%
               </div>
-              <div className="text-sm text-igudar-text-muted">Avg Shares per Property</div>
+              <div className="text-sm text-igudar-text-muted">Total Ownership</div>
             </div>
           </div>
 
@@ -198,9 +195,9 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ summary }) =
               </div>
               <div>
                 <div className="text-lg font-semibold text-igudar-text">
-                  {summary.total_shares.toLocaleString()}
+                  {summary.total_percentage.toFixed(1)}%
                 </div>
-                <div className="text-xs text-igudar-text-muted">Total Shares</div>
+                <div className="text-xs text-igudar-text-muted">Total Ownership</div>
               </div>
               <div>
                 <div className="text-lg font-semibold text-green-600">

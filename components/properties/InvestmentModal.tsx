@@ -64,20 +64,22 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 	};
 
 	const minInvestmentMAD = Math.max(property.min_investment / 100, 1000);
-	const pricePerShareMAD = property.price_per_share / 100;
+	const targetAmountMAD = property.target_amount / 100;
+	const totalRaisedMAD = property.total_raised / 100;
+	const remainingFundingMAD = targetAmountMAD - totalRaisedMAD;
 
 	// Calculate investment details
 	const calculateInvestment = () => {
 		const amount = parseFloat(investmentAmount) || 0;
 		if (amount <= 0) return null;
 
-		const sharesPurchased = Math.floor(amount / pricePerShareMAD);
-		const actualAmount = sharesPurchased * pricePerShareMAD;
+		const actualAmount = Math.min(amount, remainingFundingMAD);
+		const investmentPercentage = targetAmountMAD > 0 ? (actualAmount / targetAmountMAD) * 100 : 0;
 		const expectedAnnualReturn = (actualAmount * property.expected_roi) / 100;
 		const expectedMonthlyReturn = expectedAnnualReturn / 12;
 
 		return {
-			sharesPurchased,
+			investmentPercentage,
 			actualAmount,
 			expectedAnnualReturn,
 			expectedMonthlyReturn
@@ -103,8 +105,8 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 			return false;
 		}
 
-		if (calculation.sharesPurchased > property.shares_available) {
-			setError(`Only ${property.shares_available} shares available`);
+		if (calculation.actualAmount > remainingFundingMAD) {
+			setError(`Only ${formatPrice(remainingFundingMAD)} funding remaining`);
 			return false;
 		}
 
@@ -128,9 +130,7 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 			const result = await InvestmentService.createInvestment({
 				user_id: user.id,
 				property_id: property.id,
-				shares_purchased: calculation.sharesPurchased,
 				investment_amount: Math.round(calculation.actualAmount * 100), // Convert to cents
-				purchase_price_per_share: Math.round(pricePerShareMAD * 100), // Convert to cents
 				payment_method: 'credit_card',
 				notes: `Investment in ${property.title}`
 			});
@@ -180,12 +180,14 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 						</div>
 						<div className="text-lg font-bold text-igudar-text">{property.expected_roi}%</div>
 					</div>
-					<div className="text-center p-3 bg-green-50 rounded-lg">
+					<div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
 						<div className="flex items-center justify-center text-green-600 mb-1">
-							<DollarSign className="mr-1 h-3 w-3" />
-							<span className="text-xs font-medium">Price per Share</span>
+							<TrendingUp className="mr-1 h-3 w-3" />
+							<span className="text-xs font-medium">Investment %</span>
 						</div>
-						<div className="text-lg font-bold text-green-700">{formatPrice(pricePerShareMAD)}</div>
+						<div className="text-lg font-bold text-green-700">
+							{calculation ? calculation.investmentPercentage.toFixed(2) : '0'}%
+						</div>
 					</div>
 				</div>
 
@@ -218,8 +220,8 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 						<h4 className="font-medium text-igudar-text">Investment Summary</h4>
 						<div className="space-y-2 text-sm">
 							<div className="flex justify-between">
-								<span className="text-igudar-text-secondary">Shares to Purchase</span>
-								<span className="font-semibold">{calculation.sharesPurchased.toLocaleString()}</span>
+								<span className="text-igudar-text-secondary">Investment Percentage</span>
+								<span className="font-semibold">{calculation.investmentPercentage.toFixed(2)}%</span>
 							</div>
 							<div className="flex justify-between">
 								<span className="text-igudar-text-secondary">Actual Investment</span>
@@ -283,12 +285,12 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 								<span className="font-semibold text-right max-w-xs">{property.title}</span>
 							</div>
 							<div className="flex justify-between">
-								<span className="text-igudar-text-secondary">Shares</span>
-								<span className="font-semibold">{calculation.sharesPurchased.toLocaleString()}</span>
+								<span className="text-igudar-text-secondary">Investment Percentage</span>
+								<span className="font-semibold">{calculation.investmentPercentage.toFixed(2)}%</span>
 							</div>
 							<div className="flex justify-between">
-								<span className="text-igudar-text-secondary">Price per Share</span>
-								<span className="font-semibold">{formatPrice(pricePerShareMAD)}</span>
+								<span className="text-igudar-text-secondary">Target Amount</span>
+								<span className="font-semibold">{formatPrice(targetAmountMAD)}</span>
 							</div>
 							<Separator />
 							<div className="flex justify-between text-lg">
@@ -359,7 +361,7 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 				<div className="p-4 bg-green-50 rounded-lg border border-green-200">
 					<div className="text-sm text-green-700">
 						<div>Investment Amount: <span className="font-semibold">{formatPrice(calculation.actualAmount)}</span></div>
-						<div>Shares Purchased: <span className="font-semibold">{calculation.sharesPurchased.toLocaleString()}</span></div>
+						<div>Investment Percentage: <span className="font-semibold">{calculation.investmentPercentage.toFixed(2)}%</span></div>
 						<div>Property: <span className="font-semibold">{property.title}</span></div>
 					</div>
 				</div>
