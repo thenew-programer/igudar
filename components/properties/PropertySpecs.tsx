@@ -161,16 +161,23 @@ export const PropertySpecs: React.FC<PropertySpecsProps> = ({ property }) => {
             </div>
             
             <div className="flex items-center justify-between">
-              <span className="text-sm text-igudar-text-secondary">Total Shares</span>
+              <span className="text-sm text-igudar-text-secondary">Funding Target</span>
               <span className="font-semibold text-igudar-text">
-                {property.total_shares.toLocaleString()}
+                {formatPrice(property.target_amount / 100)}
               </span>
             </div>
             
             <div className="flex items-center justify-between">
-              <span className="text-sm text-igudar-text-secondary">Shares Available</span>
+              <span className="text-sm text-igudar-text-secondary">Amount Raised</span>
               <span className="font-semibold text-igudar-text">
-                {property.shares_available.toLocaleString()}
+                {formatPrice(property.total_raised / 100)}
+              </span>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-igudar-text-secondary">Funding Progress</span>
+              <span className="font-semibold text-igudar-primary">
+                {property.funding_progress}%
               </span>
             </div>
             

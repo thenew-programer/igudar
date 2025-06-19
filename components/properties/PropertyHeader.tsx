@@ -182,14 +182,14 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 					<div className="text-center md:text-left">
 						<div className="text-sm text-igudar-text-muted mb-1">Total Value</div>
 						<div className="text-xl md:text-2xl font-bold text-igudar-text">
-							{formatPrice(property.price)}
+							{formatPrice(property.price / 100)}
 						</div>
 					</div>
 
 					<div className="text-center md:text-left">
 						<div className="text-sm text-igudar-text-muted mb-1">Min Investment</div>
 						<div className="text-xl md:text-2xl font-bold text-igudar-text">
-							{formatPrice(property.min_investment)}
+							{formatPrice(property.min_investment / 100)}
 						</div>
 					</div>
 
@@ -201,9 +201,9 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 					</div>
 
 					<div className="text-center md:text-left">
-						<div className="text-sm text-igudar-text-muted mb-1">Rental Yield</div>
-						<div className="text-xl md:text-2xl font-bold text-green-600">
-							{property.rental_yield}%
+						<div className="text-sm text-igudar-text-muted mb-1">Remaining</div>
+						<div className="text-xl md:text-2xl font-bold text-igudar-text">
+							{formatPrice((property.target_amount - property.total_raised) / 100)}
 						</div>
 					</div>
 				</div>

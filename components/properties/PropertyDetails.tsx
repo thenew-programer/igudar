@@ -81,7 +81,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
                   <span>Total Property Value</span>
                 </div>
                 <span className="font-semibold text-igudar-text">
-                  {formatPrice(property.price)}
+                  {formatPrice(property.price / 100)}
                 </span>
               </div>
 
@@ -91,7 +91,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
                   <span>Funding Target</span>
                 </div>
                 <span className="font-semibold text-igudar-text">
-                  {formatPrice(property.target_amount)}
+                  {formatPrice(property.target_amount / 100)}
                 </span>
               </div>
 
@@ -101,7 +101,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
                   <span>Amount Raised</span>
                 </div>
                 <span className="font-semibold text-green-600">
-                  {formatPrice(property.total_raised)}
+                  {formatPrice(property.total_raised / 100)}
                 </span>
               </div>
 
@@ -154,6 +154,16 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
                 </div>
                 <span className="font-semibold text-igudar-text">
                   {formatDate(property.funding_deadline)}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center text-igudar-text-secondary">
+                  <DollarSign className="mr-2 h-4 w-4" />
+                  <span>Min Investment</span>
+                </div>
+                <span className="font-semibold text-igudar-text">
+                  {formatPrice(property.min_investment / 100)}
                 </span>
               </div>
             </div>
