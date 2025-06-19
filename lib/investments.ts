@@ -38,6 +38,7 @@ export class InvestmentService {
             expected_roi,
             rental_yield,
             image_url,
+            target_amount,
             status
           )
         `)

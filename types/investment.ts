@@ -29,6 +29,7 @@ export interface Investment {
     city: string;
     region: string;
     property_type: string;
+    target_amount: number;
     expected_roi: number;
     rental_yield: number;
     image_url: string;
