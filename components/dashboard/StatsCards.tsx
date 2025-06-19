@@ -234,7 +234,7 @@ export const StatsCards: React.FC = () => {
 	const statCards = generateStatCards(stats);
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" key={renderKey}>
+		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 			{statCards.map((stat) => {
 				const Icon = stat.icon;
 				const ChangeIcon = stat.changeType === 'positive' ? ArrowUpRight : ArrowDownRight;
