@@ -355,11 +355,7 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
             </Button>
           </div>
         </div>
-							{portfolioBreakdown.length > 0 
-								? (portfolioBreakdown.reduce((sum, item) => sum + item.average_roi, 0) / portfolioBreakdown.length).toFixed(1)
-								: '0'
-							}%
-      
+      </CardHeader>
       <CardContent>
         {activeView === 'performance' && renderPerformanceView()}
         {activeView === 'breakdown' && renderBreakdownView()}
