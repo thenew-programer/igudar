@@ -74,7 +74,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           if (onSuccess) {
             onSuccess();
           } else {
-            router.push(redirectTo);
+            window.location.href = redirectTo;
           }
         }, 2000);
       } else {

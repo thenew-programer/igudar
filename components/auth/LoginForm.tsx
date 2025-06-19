@@ -57,7 +57,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 				// if (onSuccess) {
 				// 	onSuccess();
 				// } else {
-				router.push(redirectParam);
+				window.location.href = redirectParam;
 				// }
 			} else {
 				setError(result.error || 'Sign in failed. Please try again.');
