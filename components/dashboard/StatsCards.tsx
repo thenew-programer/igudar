@@ -120,7 +120,7 @@ export const StatsCards: React.FC = () => {
       },
       {
         title: 'Total Ownership',
-        value: `${data.total_percentage.toFixed(1)}%`,
+        value: `${data.total_percentage?.toFixed(1) || '0.00'}%`,
         change: data.total_percentage > 0 ? `${data.total_properties} properties` : '0 properties',
         changeType: 'positive',
         icon: PieChart,

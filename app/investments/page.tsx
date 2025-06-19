@@ -223,7 +223,11 @@ export default function InvestmentsPage() {
                                   {property?.title || 'Unknown Property'}
                                 </h4>
                                 <p className="text-xs text-igudar-text-muted mb-2">
-                                  {property?.city || 'Unknown'} • {investment.investment_percentage?.toFixed(2) || '0.00'}% ownership
+                                  {property?.city || 'Unknown'} • {
+                                    (property && property.target_amount > 0 
+                                      ? ((investment.investment_amount / property.target_amount) * 100).toFixed(2) 
+                                      : investment.investment_percentage?.toFixed(2) || '0.00')
+                                  }% ownership
                                 </p>
                                 <div className="flex items-center justify-between">
                                   <span className="text-sm font-semibold text-igudar-text">
@@ -316,7 +320,7 @@ export default function InvestmentsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-igudar-text-secondary">Total Ownership</span>
                       <span className="font-semibold text-igudar-text">
-                        {portfolioSummary.total_percentage.toFixed(1)}%
+                        {portfolioSummary.total_percentage?.toFixed(1) || '0.00'}%
                       </span>
                     </div>
                     <div className="flex items-center justify-between">

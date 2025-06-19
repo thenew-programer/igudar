@@ -54,8 +54,8 @@ export const InvestmentCard: React.FC<InvestmentCardProps> = ({
   
   // Calculate investment percentage
   const investmentPercentage = property && property.target_amount > 0 
-    ? (investment.investment_amount / property.target_amount) * 100 
-    : 0;
+    ? (investment.investment_amount / property.target_amount) * 100
+    : investment.investment_percentage || 0;
 
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -119,7 +119,7 @@ export const InvestmentCard: React.FC<InvestmentCardProps> = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm text-igudar-text-secondary">Investment %</span>
-              <span className="font-semibold text-igudar-text">{investmentPercentage.toFixed(2)}%</span>
+              <span className="font-semibold text-igudar-text">{investmentPercentage?.toFixed(2) || '0.00'}%</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-igudar-text-secondary">Target Amount</span>
