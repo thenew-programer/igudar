@@ -179,7 +179,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 			if (error) {
 				console.error('Sign out error:', error);
 			} else {
-				window.location.href = '/auth/login'
+				window.location.href = '/auth/login';
 			}
 		} catch (error) {
 			console.error('Sign out error:', error);
