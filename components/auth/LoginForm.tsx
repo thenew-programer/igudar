@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight, Building2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -73,22 +73,20 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 	return (
 		<div className="w-full">
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-				{/* Logo Section */}
-				<div className="mb-10">
-					<div className="flex items-center mb-6">
-						<Image 
-							src="/igudar.svg" 
-							alt="IGUDAR Logo" 
-							width={56} 
-							height={56} 
-							className="mr-4"
-						/>
-						<div className="ml-4">
-							<h1 className="text-3xl font-bold bg-gradient-to-r from-igudar-primary to-igudar-primary/80 bg-clip-text text-transparent">
-								IGUDAR
-							</h1>
-						</div>
-					</div>
+				<div className="flex items-center mb-10">
+					<Image 
+						src="/igudar.svg" 
+						alt="SoftQA" 
+						width={40} 
+						height={40} 
+						className="mr-3"
+					/>
+					<h1 className="text-xl font-semibold">SoftQA</h1>
+				</div>
+				
+				<div className="mb-8">
+					<h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
+					<p className="text-gray-600">Sign in to access your dashboard and continue optimizing your QA process.</p>
 				</div>
 
 				{error && (
@@ -100,7 +98,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 				<div className="space-y-4">
 					<div className="space-y-2">
 						<Label htmlFor="email" className="text-sm font-medium text-slate-700">
-							Email Address
+							Email
 						</Label>
 						<div className="relative">
 							<Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
@@ -108,7 +106,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 								id="email"
 								type="email"
 								placeholder="Enter your email"
-								className={`pl-11 h-12 bg-white border-slate-300 focus:border-igudar-primary focus:ring-igudar-primary/20 ${errors.email ? 'border-red-300 focus:border-red-500' : ''
+								className={`pl-11 h-12 bg-white border-slate-300 focus:border-[#0d3b3f] focus:ring-[#0d3b3f]/20 ${errors.email ? 'border-red-300 focus:border-red-500' : ''
 									}`}
 								{...register('email')}
 								disabled={isLoading}
@@ -129,7 +127,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 								id="password"
 								type={showPassword ? 'text' : 'password'}
 								placeholder="Enter your password"
-								className={`pl-11 pr-11 h-12 bg-white border-slate-300 focus:border-igudar-primary focus:ring-igudar-primary/20 ${errors.password ? 'border-red-300 focus:border-red-500' : ''
+								className={`pl-11 pr-11 h-12 bg-white border-slate-300 focus:border-[#0d3b3f] focus:ring-[#0d3b3f]/20 ${errors.password ? 'border-red-300 focus:border-red-500' : ''
 									}`}
 								{...register('password')}
 								disabled={isLoading}
@@ -153,7 +151,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 							<input
 								id="remember-me"
 								name="remember-me"
-								type="checkbox"
+								type="checkbox" 
 								className="h-4 w-4 text-igudar-primary focus:ring-igudar-primary border-slate-300 rounded"
 							/>
 							<label htmlFor="remember-me" className="ml-2 block text-sm text-slate-700">
@@ -162,7 +160,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 						</div>
 						<Link
 							href="/auth/forgot-password"
-							className="text-sm font-medium text-igudar-primary hover:text-igudar-primary/80 transition-colors"
+							className="text-sm font-medium text-[#0d3b3f] hover:text-[#0d3b3f]/80 transition-colors"
 						>
 							Forgot password?
 						</Link>
@@ -171,7 +169,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
 				<Button
 					type="submit"
-					className="w-full h-12 bg-gradient-to-r from-igudar-primary to-igudar-primary/90 hover:from-igudar-primary/90 hover:to-igudar-primary text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+					className="w-full h-12 bg-[#0d3b3f] hover:bg-[#0d3b3f]/90 text-white font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-200"
 					disabled={isLoading}
 				>
 					{isLoading ? (
@@ -180,7 +178,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 							Signing in...
 						</>
 					) : (
-						<>
+						<>  
 							Sign In
 							<ArrowRight className="ml-2 h-5 w-5" />
 						</>
@@ -191,18 +189,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 					<div className="absolute inset-0 flex items-center">
 						<span className="w-full border-t border-slate-300" />
 					</div>
-					<div className="relative flex justify-center text-xs uppercase">
-						<span className="bg-white px-2 text-slate-500">New to IGUDAR?</span>
+					<div className="relative flex justify-center text-xs">
+						<span className="bg-white px-2 text-slate-500">Don't have an account?</span>
 					</div>
 				</div>
 
 				<Link href="/auth/register">
 					<Button
 						type="button"
-						variant="outline"
-						className="w-full h-12 border-2 border-slate-300 hover:border-igudar-primary hover:bg-igudar-primary/5 text-slate-700 hover:text-igudar-primary font-medium rounded-xl transition-all duration-200"
+						variant="outline" 
+						className="w-full h-12 border border-slate-300 hover:border-[#0d3b3f] hover:bg-[#0d3b3f]/5 text-slate-700 hover:text-[#0d3b3f] font-medium rounded-md transition-all duration-200"
 					>
-						Create your account
+						Sign Up
 					</Button>
 				</Link>
 			</form>
