@@ -7,8 +7,11 @@ export async function middleware(req: NextRequest) {
 	const supabase = createMiddlewareClient({ req, res });
 
 	const {
-		data: { session },
+		data: { session }
 	} = await supabase.auth.getSession();
+
+	// Check if the session is valid (has a user)
+	const isAuthenticated = !!session?.user;
 
 	const protectedRoutes = ['/dashboard', '/properties', '/investments', '/portfolio', '/profile', '/settings', '/security', '/help', '/billing'];
 	const authRoutes = ['/auth/login', '/auth/register'];
@@ -20,13 +23,13 @@ export async function middleware(req: NextRequest) {
 		req.nextUrl.pathname.startsWith(route)
 	);
 
-	if (isProtectedRoute && !session) {
+	if (isProtectedRoute && !isAuthenticated) {
 		const redirectUrl = new URL('/auth/login', req.url);
 		redirectUrl.searchParams.set('redirectTo', req.nextUrl.pathname);
 		return NextResponse.redirect(redirectUrl);
 	}
 
-	if (isAuthRoute && session) {
+	if (isAuthRoute && isAuthenticated) {
 		let redirectTo = req.nextUrl.searchParams.get('redirectTo') || '/dashboard';
 
 		if (authRoutes.some(route => redirectTo.startsWith(route))) {
@@ -37,7 +40,7 @@ export async function middleware(req: NextRequest) {
 	}
 
 	if (req.nextUrl.pathname === '/') {
-		if (session) {
+		if (isAuthenticated) {
 			return NextResponse.redirect(new URL('/dashboard', req.url));
 		} else {
 			return NextResponse.redirect(new URL('/auth/login', req.url));
