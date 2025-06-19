@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { StatsCards } from '@/components/dashboard/StatsCards';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { QuickActions } from '@/components/dashboard/QuickActions';
@@ -8,84 +9,90 @@ import { InvestmentChart } from '@/components/dashboard/InvestmentChart';
 import { useAuth } from '@/components/auth/AuthProvider';
 
 export default function DashboardPage() {
-  const { user } = useAuth();
-  const investmentOverviewRef = useRef<HTMLDivElement>(null);
+	const { user } = useAuth();
+	const pathname = usePathname();
+	const [renderKey, setRenderKey] = useState(0);
+	const investmentOverviewRef = useRef<HTMLDivElement>(null);
 
-  // Handle scroll behavior to stop at investment overview
-  useEffect(() => {
-    const handleScroll = () => {
-      if (investmentOverviewRef.current) {
-        const rect = investmentOverviewRef.current.getBoundingClientRect();
-        const isInView = rect.top <= 0 && rect.bottom > 0;
-        
-        if (isInView) {
-          // Add a subtle visual indicator when the investment overview is in focus
-          investmentOverviewRef.current.style.boxShadow = '0 0 0 2px rgba(93, 24, 233, 0.1)';
-        } else {
-          investmentOverviewRef.current.style.boxShadow = 'none';
-        }
-      }
-    };
+	// Force re-render on route changes AND user changes
+	useEffect(() => {
+		setRenderKey(Date.now());
+	}, [pathname, user?.id]);
+	// Handle scroll behavior to stop at investment overview
+	useEffect(() => {
+		const handleScroll = () => {
+			if (investmentOverviewRef.current) {
+				const rect = investmentOverviewRef.current.getBoundingClientRect();
+				const isInView = rect.top <= 0 && rect.bottom > 0;
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+				if (isInView) {
+					// Add a subtle visual indicator when the investment overview is in focus
+					investmentOverviewRef.current.style.boxShadow = '0 0 0 2px rgba(93, 24, 233, 0.1)';
+				} else {
+					investmentOverviewRef.current.style.boxShadow = 'none';
+				}
+			}
+		};
 
-  return (
-    <div className="flex-1 space-y-6 p-4 md:p-6" key={user?.id || 'loading'}>
-      {/* Welcome Section */}
-      <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-igudar-text">
-            Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || 'Investor'}!
-          </h1>
-          <p className="text-sm md:text-base text-igudar-text-secondary">
-            Here's an overview of your real estate investment portfolio
-          </p>
-        </div>
-      </div>
+		window.addEventListener('scroll', handleScroll);
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
 
-      {/* Stats Cards */}
-      <StatsCards />
+	return (
+		<div className="flex-1 space-y-6 p-4 md:p-6" key={renderKey}>
+			{/* Welcome Section */}
+			<div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
+				<div>
+					<h1 className="text-2xl md:text-3xl font-bold text-igudar-text">
+						Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || 'Investor'}!
+					</h1>
+					<p className="text-sm md:text-base text-igudar-text-secondary">
+						Here's an overview of your real estate investment portfolio
+					</p>
+				</div>
+			</div>
 
-      {/* Quick Actions */}
-      <QuickActions />
+			{/* Stats Cards */}
+			<StatsCards />
 
-      {/* Investment Overview Section - Scroll stops here */}
-      <div 
-        ref={investmentOverviewRef}
-        className="scroll-mt-6 transition-all duration-300"
-        style={{ scrollSnapAlign: 'start' }}
-      >
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold text-igudar-text mb-2">Investment Overview</h2>
-          <p className="text-sm text-igudar-text-secondary">
-            Detailed analysis of your portfolio performance and distribution
-          </p>
-        </div>
-        
-        {/* Main Content Grid */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Investment Chart - Takes 2 columns on large screens */}
-          <div className="lg:col-span-2">
-            <InvestmentChart />
-          </div>
+			{/* Quick Actions */}
+			<QuickActions />
 
-          {/* Recent Activity - Takes 1 column on large screens */}
-          <div className="lg:col-span-1">
-            <RecentActivity />
-          </div>
-        </div>
-      </div>
+			{/* Investment Overview Section - Scroll stops here */}
+			<div
+				ref={investmentOverviewRef}
+				className="scroll-mt-6 transition-all duration-300"
+				style={{ scrollSnapAlign: 'start' }}
+			>
+				<div className="mb-4">
+					<h2 className="text-xl font-semibold text-igudar-text mb-2">Investment Overview</h2>
+					<p className="text-sm text-igudar-text-secondary">
+						Detailed analysis of your portfolio performance and distribution
+					</p>
+				</div>
 
-      {/* Additional Content Below */}
-      <div className="space-y-6 pt-6">
-        <div className="text-center text-igudar-text-muted">
-          <p className="text-sm">
-            More portfolio insights and detailed analytics coming soon...
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+				{/* Main Content Grid */}
+				<div className="grid gap-6 lg:grid-cols-3">
+					{/* Investment Chart - Takes 2 columns on large screens */}
+					<div className="lg:col-span-2">
+						<InvestmentChart />
+					</div>
+
+					{/* Recent Activity - Takes 1 column on large screens */}
+					<div className="lg:col-span-1">
+						<RecentActivity />
+					</div>
+				</div>
+			</div>
+
+			{/* Additional Content Below */}
+			<div className="space-y-6 pt-6">
+				<div className="text-center text-igudar-text-muted">
+					<p className="text-sm">
+						More portfolio insights and detailed analytics coming soon...
+					</p>
+				</div>
+			</div>
+		</div>
+	);
 }
