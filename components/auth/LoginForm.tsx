@@ -6,7 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight, Building2 } from 'lucide-react';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -72,6 +73,24 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 	return (
 		<div className="w-full">
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+				{/* Logo Section */}
+				<div className="mb-10">
+					<div className="flex items-center mb-6">
+						<Image 
+							src="/igudar.svg" 
+							alt="IGUDAR Logo" 
+							width={56} 
+							height={56} 
+							className="mr-4"
+						/>
+						<div className="ml-4">
+							<h1 className="text-3xl font-bold bg-gradient-to-r from-igudar-primary to-igudar-primary/80 bg-clip-text text-transparent">
+								IGUDAR
+							</h1>
+						</div>
+					</div>
+				</div>
+
 				{error && (
 					<Alert variant="destructive" className="border-red-200 bg-red-50">
 						<AlertDescription className="text-red-800">{error}</AlertDescription>

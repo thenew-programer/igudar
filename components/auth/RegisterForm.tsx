@@ -6,7 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, Loader2, Mail, Lock, User, ArrowRight, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, Lock, User, ArrowRight, CheckCircle, Building2 } from 'lucide-react';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

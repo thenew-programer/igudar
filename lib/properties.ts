@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import {
 	Property,
 	PropertyRiskLevel,
+	PropertyRiskLevel,
 	PropertyInsert,
 	PropertyUpdate,
 	PropertyFilters,
@@ -15,6 +16,25 @@ import {
 	PropertyValidationError
 } from '@/types/property';
 import { DatabaseResponse } from '@/types/database';
+
+// Helper function to calculate risk assessment
+export const calculateRiskAssessment = (
+	expected_roi: number,
+	funding_progress: number
+): PropertyRiskLevel => {
+	// If expected_roi is 10% or more AND funding_progress is 80% or more, the risk is 'low'
+	if (expected_roi >= 10 && funding_progress >= 80) {
+		return 'low';
+	}
+	
+	// If expected_roi is less than 5% OR funding_progress is less than 50%, the risk is 'high'
+	if (expected_roi < 5 || funding_progress < 50) {
+		return 'high';
+	}
+	
+	// Otherwise, the risk is 'medium'
+	return 'medium';
+};
 
 // Helper function to calculate risk assessment
 export const calculateRiskAssessment = (
@@ -119,16 +139,27 @@ export class PropertyService {
 			}
 
 			const propertiesWithProgress = (data || []).map(property => ({
-				...property,
-				funding_progress: property.target_amount > 0
-					? Math.round((property.total_raised / property.target_amount) * 100) : 0,
-				remaining_funding: property.target_amount - property.total_raised,
-				risk_assessment: calculateRiskAssessment(
-					property.expected_roi,
-					property.target_amount > 0
-						? Math.round((property.total_raised / property.target_amount) * 100) : 0
-				)
-			}));
+			const propertiesWithProgress = (data || []).map(property => {
+				// First calculate funding progress
+				const funding_progress = property.target_amount > 0
+					? Math.round((property.total_raised / property.target_amount) * 100) : 0;
+				
+				// Then add funding progress and remaining funding
+				const propertyWithProgress = {
+					...property,
+					funding_progress,
+					remaining_funding: property.target_amount - property.total_raised
+				};
+				
+				// Finally add risk assessment
+				return {
+					...propertyWithProgress,
+					risk_assessment: calculateRiskAssessment(
+						property.expected_roi,
+						funding_progress
+					)
+				};
+			});
 
 			return {
 				success: true,
@@ -165,21 +196,30 @@ export class PropertyService {
 				};
 			}
 
+			// First calculate funding progress
+			const funding_progress = data.target_amount > 0
+				? Math.round((data.total_raised / data.target_amount) * 100) : 0;
+			
+			// Then add funding progress and remaining funding
 			const propertyWithProgress = {
 				...data,
-				funding_progress: data.target_amount > 0
-					? Math.round((data.total_raised / data.target_amount) * 100) : 0,
-				remaining_funding: data.target_amount - data.total_raised,
+				funding_progress,
+				remaining_funding: data.target_amount - data.total_raised
+			};
+			
+			// Finally add risk assessment
+			const propertyWithRisk = {
+				...propertyWithProgress,
 				risk_assessment: calculateRiskAssessment(
 					data.expected_roi,
-					data.target_amount > 0
-						? Math.round((data.total_raised / data.target_amount) * 100) : 0
+					funding_progress
 				)
+			};
 			};
 
 			return {
 				success: true,
-				data: propertyWithProgress,
+				data: propertyWithRisk,
 				message: 'Property retrieved successfully'
 			};
 

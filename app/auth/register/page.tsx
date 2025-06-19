@@ -1,6 +1,7 @@
 import React from 'react';
 import { RegisterForm } from '@/components/auth/RegisterForm';
-import { Building2, TrendingUp, MapPin, Star, Users, Shield, Zap, Target, BarChart3 } from 'lucide-react';
+import { TrendingUp, MapPin, Star, Users, Shield, Zap, Target, BarChart3 } from 'lucide-react';
+import Image from 'next/image';
 
 export default function RegisterPage() {
   return (
@@ -11,12 +12,13 @@ export default function RegisterPage() {
           {/* Logo Section */}
           <div className="mb-8">
             <div className="flex items-center mb-6">
-              <div className="relative">
-                <div className="w-14 h-14 bg-gradient-to-br from-igudar-primary to-igudar-primary/80 rounded-2xl flex items-center justify-center shadow-lg">
-                  <Building2 className="h-8 w-8 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-              </div>
+              <Image 
+                src="/igudar.svg" 
+                alt="IGUDAR Logo" 
+                width={56} 
+                height={56} 
+                className="mr-4"
+              />
               <div className="ml-4">
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-igudar-primary to-igudar-primary/80 bg-clip-text text-transparent">
                   IGUDAR
