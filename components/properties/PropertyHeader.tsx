@@ -199,9 +199,17 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 					</Badge>
 
 					{/* Risk Assessment Badge */}
-					<Badge variant="outline" className={`${getRiskColor(property.risk_assessment)} px-3 py-1`}>
-						<RiskIcon className="mr-1 h-3 w-3" />
-						{property.risk_assessment ? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` : 'Unknown Risk'}
+					<Badge 
+						variant="outline" 
+						className={`${getRiskColor(property.risk_assessment)} px-3.5 py-1.5 font-medium shadow-sm`}
+					>
+						<RiskIcon className="mr-2 h-4 w-4" />
+						<span className="font-semibold">
+							{property.risk_assessment 
+								? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` 
+								: 'Unknown Risk'
+							}
+						</span>
 					</Badge>
 				</div>
 

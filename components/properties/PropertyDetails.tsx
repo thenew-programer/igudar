@@ -200,7 +200,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
                   <RiskIcon className="mr-2 h-4 w-4" />
                   <span>Risk Assessment</span>
                 </div>
-                <Badge className={`${getRiskColor(property.risk_assessment)}`}>
+                <Badge className={`${getRiskColor(property.risk_assessment)} px-3 py-1 font-medium shadow-sm`}>
                   {property.risk_assessment ? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` : 'Unknown Risk'}
                 </Badge>
               </div>

@@ -11,6 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { InvestmentModal } from './InvestmentModal';
 import { 
+  AlertTriangle,
+  ShieldCheck,
   Calculator,
   TrendingUp,
   Calendar,
@@ -45,6 +47,36 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
   }>({ monthly: 0, annual: 0, total: 0 });
   const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
   const [prefilledAmount, setPrefilledAmount] = useState<string>('');
+
+  // Get risk assessment color
+  const getRiskColor = (risk?: 'low' | 'medium' | 'high'): string => {
+    switch (risk) {
+      case 'low':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'high':
+        return 'bg-red-100 text-red-800 border-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  // Get risk assessment icon
+  const getRiskIcon = (risk?: 'low' | 'medium' | 'high') => {
+    switch (risk) {
+      case 'low':
+        return ShieldCheck;
+      case 'medium':
+        return TrendingUp;
+      case 'high':
+        return AlertTriangle;
+      default:
+        return TrendingUp;
+    }
+  };
+
+  const RiskIcon = getRiskIcon(property.risk_assessment);
 
   // Calculate investment details
   const calculateInvestment = (amount: string) => {
@@ -187,9 +219,19 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
           {/* AI Insights Section */}
           {aiInsights.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center text-igudar-primary mb-2">
-                <Brain className="mr-2 h-4 w-4" />
-                <span className="text-sm font-medium">AI Investment Insights</span>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center text-igudar-primary">
+                  <Brain className="mr-2 h-4 w-4" />
+                  <span className="text-sm font-medium">AI Investment Insights</span>
+                </div>
+                
+                {/* Risk Assessment Badge */}
+                {property.risk_assessment && (
+                  <Badge variant="outline" className={`${getRiskColor(property.risk_assessment)} px-2 py-1 font-medium`}>
+                    <RiskIcon className="mr-1 h-3 w-3" />
+                    {property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)}
+                  </Badge>
+                )}
               </div>
               <div className="space-y-2">
                 {aiInsights.map((insight, index) => {
@@ -379,13 +421,36 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
 
           {/* Time Remaining */}
           <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-center text-blue-700">
-              <Calendar className="mr-2 h-4 w-4" />
-              <span className="text-sm font-medium">Time Remaining</span>
+            <div className="flex flex-col">
+              <div className="flex items-center text-blue-700 mb-1">
+                <Calendar className="mr-2 h-4 w-4" />
+                <span className="text-sm font-medium">Time Remaining</span>
+              </div>
+              <div className="text-xs text-blue-600 ml-6">
+                {property.risk_assessment === 'high' && 'Higher risk due to deadline'}
+              </div>
             </div>
             <Badge className="bg-blue-100 text-blue-800 border-blue-200">
               {daysRemaining > 0 ? `${daysRemaining} days` : 'Ended'}
             </Badge>
+          </div>
+          
+          {/* Risk Assessment Card */}
+          <div className={`p-4 rounded-lg border ${getRiskColor(property.risk_assessment)}`}>
+            <div className="flex items-center mb-2">
+              <RiskIcon className="h-5 w-5 mr-2" />
+              <h4 className="font-semibold">
+                {property.risk_assessment 
+                  ? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk Investment` 
+                  : 'Risk Assessment'}
+              </h4>
+            </div>
+            <p className="text-sm">
+              {property.risk_assessment === 'low' && 'This property has a high expected ROI and strong funding progress, indicating lower investment risk.'}
+              {property.risk_assessment === 'medium' && 'This property has a balanced risk profile with moderate expected returns and funding progress.'}
+              {property.risk_assessment === 'high' && 'This property has either a low expected ROI or limited funding progress, indicating higher investment risk.'}
+              {!property.risk_assessment && 'Risk assessment information is not available for this property.'}
+            </p>
           </div>
 
           {/* Investment Button */}

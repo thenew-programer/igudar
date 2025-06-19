@@ -160,11 +160,13 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           </Badge>
         </div>
         
-        {/* Risk Assessment Badge */}
-        <Badge variant="outline" className={`${getRiskColor(property.risk_assessment)}`}>
-          <RiskIcon className="mr-1 h-3 w-3" />
-          {property.risk_assessment ? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` : 'Unknown Risk'}
-        </Badge>
+        {/* Risk Assessment Badge - Enhanced */}
+        <div className="absolute bottom-3 right-3">
+          <Badge variant="outline" className={`${getRiskColor(property.risk_assessment)} px-3 py-1.5 font-medium shadow-sm`}>
+            <RiskIcon className="mr-1.5 h-3.5 w-3.5" />
+            {property.risk_assessment ? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` : 'Unknown Risk'}
+          </Badge>
+        </div>
       </div>
 
       <CardContent className="p-4 space-y-4">
