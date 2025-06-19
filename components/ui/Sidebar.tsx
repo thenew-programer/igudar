@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { LanguageSelector } from '@/components/auth/LanguageSelector';
+import { NavigationItem } from '@/types/navigation';
+import Image from 'next/image';
 import { 
   LayoutDashboard, 
   Building2, 
@@ -170,9 +173,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Mobile header */}
             <div className="flex items-center justify-between p-4 border-b border-border">
               <Link href="/dashboard" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-igudar-primary rounded-lg flex items-center justify-center">
-                  <Building2 className="h-5 w-5 text-white" />
-                </div>
+                <Image 
+                  src="/igudar.svg" 
+                  alt="IGUDAR Logo" 
+                  width={40} 
+                  height={40} 
+                  className="mr-2"
+                />
                 <span className="text-xl font-bold text-igudar-primary">IGUDAR</span>
               </Link>
               <Button
@@ -240,9 +247,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Desktop header */}
       <div className={`flex items-center ${isCollapsed ? 'justify-center px-2' : 'justify-between px-4'} py-4 border-b border-border`}>
         <Link href="/dashboard" className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-igudar-primary rounded-lg flex items-center justify-center flex-shrink-0">
-            <Building2 className="h-5 w-5 text-white" />
-          </div>
+          <Image 
+            src="/igudar.svg" 
+            alt="IGUDAR Logo" 
+            width={40} 
+            height={40} 
+            className="mr-2"
+          />
           {!isCollapsed && (
             <span className="text-xl font-bold text-igudar-primary transition-opacity duration-200">
               IGUDAR
