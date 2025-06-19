@@ -204,7 +204,7 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 						className="text-right text-lg"
 					/>
 					<div className="text-xs text-igudar-text-muted">
-						Available shares: {property.shares_available.toLocaleString()}
+						Remaining funding: {formatPrice(remainingFundingMAD)}
 					</div>
 				</div>
 
