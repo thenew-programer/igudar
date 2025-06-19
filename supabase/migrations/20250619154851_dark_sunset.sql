@@ -74,27 +74,28 @@ CREATE OR REPLACE FUNCTION prevent_over_funding()
 RETURNS TRIGGER AS $$
 DECLARE
   total_confirmed_amount bigint;
-  target_amount bigint;
+  v_target_amount bigint; -- Renamed local variable
 BEGIN
   -- Calculate total confirmed investment amount for this property
   SELECT COALESCE(SUM(investment_amount), 0) INTO total_confirmed_amount
-  FROM investments 
+  FROM investments
   WHERE property_id = NEW.property_id AND status = 'confirmed';
-  
+
   -- Get target amount for the property
-  SELECT target_amount INTO target_amount
-  FROM properties 
-  WHERE id = NEW.property_id;
-  
+  SELECT p.target_amount INTO v_target_amount -- Qualified with alias 'p'
+  FROM properties p -- Added alias 'p'
+  WHERE p.id = NEW.property_id;
+
   -- Check if this investment would exceed target funding
-  IF (total_confirmed_amount + NEW.investment_amount) > target_amount THEN
-    RAISE EXCEPTION 'Investment would exceed funding target. Target: % MAD, Already raised: % MAD, Requested: % MAD', 
-      (target_amount / 100), (total_confirmed_amount / 100), (NEW.investment_amount / 100);
+  IF (total_confirmed_amount + NEW.investment_amount) > v_target_amount THEN
+    RAISE EXCEPTION 'Investment would exceed funding target. Target: % MAD, Already raised: % MAD, Requested: % MAD',
+      (v_target_amount / 100), (total_confirmed_amount / 100), (NEW.investment_amount / 100);
   END IF;
-  
+
   RETURN NEW;
 END;
 $$ language 'plpgsql';
+
 
 -- Create trigger to prevent over-funding
 CREATE TRIGGER prevent_over_funding_trigger
