@@ -47,7 +47,7 @@ interface AIInsight {
 }
 
 export default function PortfolioPage() {
-	const { user } = useAuth();
+	const { user, loading: authLoading } = useAuth();
 	const [portfolioSummary, setPortfolioSummary] = useState<PortfolioSummaryType | null>(null);
 	const [performanceData, setPerformanceData] = useState<InvestmentPerformance[]>([]);
 	const [portfolioBreakdown, setPortfolioBreakdown] = useState<PortfolioBreakdown[]>([]);
@@ -209,6 +209,11 @@ export default function PortfolioPage() {
 
 	const aiInsights: AIInsight[] = generateAIInsights(); // Explicitly type the aiInsights array
 
+	// Handle authentication loading state
+	if (authLoading) {
+		return <PortfolioPageSkeleton />;
+	}
+
 	if (loading) {
 		return <PortfolioPageSkeleton />;
 	}
@@ -256,7 +261,7 @@ export default function PortfolioPage() {
 	}
 
 	return (
-		<div className="p-6" key={Date.now()}>
+		<div className="p-6">
 			<div className="max-w-7xl mx-auto space-y-8">
 				{/* Header */}
 				<div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">

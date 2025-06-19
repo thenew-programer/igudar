@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/components/auth/AuthProvider';
 
 export default function PropertiesPage() {
-	const { user } = useAuth()
+	const { user, loading: authLoading } = useAuth();
 	const [allProperties, setAllProperties] = useState<Property[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -160,8 +160,31 @@ export default function PropertiesPage() {
 		setSearchTerm('');
 	};
 
+	// Handle authentication loading state
+	if (authLoading) {
+		return (
+			<div className="p-6">
+				<div className="mb-8">
+					<Skeleton className="h-10 w-64 mb-2" />
+					<Skeleton className="h-6 w-96" />
+				</div>
+				<div className="mb-6 space-y-4">
+					<div className="flex flex-col sm:flex-row gap-4">
+						<Skeleton className="h-10 w-full sm:w-3/4 rounded-lg" />
+						<Skeleton className="h-10 w-full sm:w-1/4 rounded-lg" />
+					</div>
+				</div>
+				<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+					{Array.from({ length: 6 }).map((_, index) => (
+						<Skeleton key={index} className="h-80 w-full rounded-lg" />
+					))}
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className="p-6" key={Date.now()}>
+		<div className="p-6">
 			{/* Header */}
 			<div className="mb-8">
 				<h1 className="text-3xl md:text-4xl font-bold text-igudar-text mb-2">

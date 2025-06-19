@@ -43,15 +43,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	useEffect(() => {
 		// Get initial session
 		const initializeAuth = async () => {
-			setLoading(true);
 			try {
+				setLoading(true);
 				const { session, error } = await getSession();
 				
 				if (error) {
 					console.error('Error getting initial session:', error);
 					setUser(null);
 					setUserProfile(null);
-					setLoading(false);
 					
 					// If there's an auth error and we're not on a login page, redirect to login
 					if (typeof window !== 'undefined' && 
@@ -73,6 +72,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 					setUserProfile(null);
 				}
 			} catch (error) {
+				console.error('Error getting initial session:', error);
+				setUser(null);
+				setUserProfile(null);
 				console.error('Error getting initial session:', error);
 				setUser(null);
 				setUserProfile(null);
@@ -156,6 +158,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 				}
 				await supabase.auth.getSession();
 			}
+			setLoading(false);
 		};
 
 		document.addEventListener('visibilitychange', handleVisibilityChange);

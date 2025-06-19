@@ -32,12 +32,12 @@ import {
 import { ProfileService, PaymentMethod, BillingAddress } from '@/lib/profile';
 
 export default function BillingPage() {
+	const { user, loading: authLoading } = useAuth();
 	// Mock billing data - in real app this would come from API
 	const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
 	const [billingAddress, setBillingAddress] = useState<BillingAddress | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const { user } = useAuth();
 	const mockTransactions = [
 		{
 			id: '1',
@@ -258,8 +258,27 @@ export default function BillingPage() {
 		}
 	};
 
+	// Handle authentication loading state
+	if (authLoading) {
+		return (
+			<div className="p-6">
+				<div className="max-w-6xl mx-auto space-y-8">
+					<Skeleton className="h-10 w-64 mb-2" />
+					<Skeleton className="h-4 w-96" />
+					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+						{Array.from({ length: 4 }).map((_, i) => (
+							<Skeleton key={i} className="h-32 w-full rounded-lg" />
+						))}
+					</div>
+					<Skeleton className="h-64 w-full rounded-lg" />
+					<Skeleton className="h-96 w-full rounded-lg" />
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className="p-6" key={Date.now()}>
+		<div className="p-6">
 			<div className="max-w-6xl mx-auto space-y-8">
 				{/* Header */}
 				<div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">

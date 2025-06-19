@@ -1,30 +1,16 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import React, { useRef, useEffect } from 'react';
 import { StatsCards } from '@/components/dashboard/StatsCards';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { InvestmentChart } from '@/components/dashboard/InvestmentChart';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
-	const { user } = useAuth();
-	const pathname = usePathname();
-	const [renderKey, setRenderKey] = useState<number>(Date.now());
+	const { user, loading: authLoading } = useAuth();
 	const investmentOverviewRef = useRef<HTMLDivElement>(null);
-
-	// Force re-render on route changes AND user changes
-	useEffect(() => {
-		setRenderKey(Date.now());
-	}, [pathname]);
-
-	// Force re-render when user changes
-	useEffect(() => {
-		if (user?.id) {
-			setRenderKey(Date.now());
-		}
-	}, [user?.id]);
 
 	// Handle scroll behavior to stop at investment overview
 	useEffect(() => {
@@ -46,8 +32,24 @@ export default function DashboardPage() {
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
+	// Handle authentication loading state
+	if (authLoading) {
+		return (
+			<div className="flex-1 space-y-6 p-4 md:p-6">
+				<Skeleton className="h-10 w-64 mb-4" />
+				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+					{Array.from({ length: 4 }).map((_, i) => (
+						<Skeleton key={i} className="h-32 w-full" />
+					))}
+				</div>
+				<Skeleton className="h-24 w-full" />
+				<Skeleton className="h-96 w-full" />
+			</div>
+		);
+	}
+
 	return (
-		<div className="flex-1 space-y-6 p-4 md:p-6" key={renderKey}>
+		<div className="flex-1 space-y-6 p-4 md:p-6">
 			{/* Welcome Section */}
 			<div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
 				<div>

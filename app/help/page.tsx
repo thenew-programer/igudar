@@ -40,7 +40,7 @@ import {
 } from 'lucide-react';
 
 export default function HelpPage() {
-	const { user } = useAuth();
+	const { user, loading: authLoading } = useAuth();
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState('all');
 	const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
@@ -199,8 +199,38 @@ export default function HelpPage() {
 		console.log(`FAQ ${faqId} marked as ${helpful ? 'helpful' : 'not helpful'}`);
 	};
 
+	// Handle authentication loading state
+	if (authLoading) {
+		return (
+			<div className="p-4 md:p-6">
+				<div className="max-w-6xl mx-auto space-y-6">
+					<div className="text-center space-y-4">
+						<Skeleton className="h-10 w-96 mx-auto" />
+						<Skeleton className="h-6 w-2/3 mx-auto" />
+					</div>
+					<Skeleton className="h-12 w-full max-w-2xl mx-auto rounded-lg" />
+					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+						{Array.from({ length: 4 }).map((_, i) => (
+							<Skeleton key={i} className="h-48 w-full rounded-lg" />
+						))}
+					</div>
+					<div className="grid gap-6 lg:grid-cols-3">
+						<div className="lg:col-span-2 space-y-6">
+							<Skeleton className="h-64 w-full rounded-lg" />
+							<Skeleton className="h-96 w-full rounded-lg" />
+						</div>
+						<div className="space-y-6">
+							<Skeleton className="h-48 w-full rounded-lg" />
+							<Skeleton className="h-64 w-full rounded-lg" />
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className="p-4 md:p-6" key={Date.now()}>
+		<div className="p-4 md:p-6">
 			<div className="max-w-6xl mx-auto space-y-6">
 				{/* Header */}
 				<div className="text-center space-y-4">

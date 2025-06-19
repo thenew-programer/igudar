@@ -36,7 +36,7 @@ import {
 import { Document, DocumentCategory, DocumentService } from '@/lib/documents';
 
 export default function DocumentsPage() {
-	const { user } = useAuth();
+	const { user, loading: authLoading } = useAuth();
 	const [documents, setDocuments] = useState<Document[]>([]);
 	const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -308,8 +308,31 @@ export default function DocumentsPage() {
 		return File;
 	};
 
+	// Handle authentication loading state
+	if (authLoading) {
+		return (
+			<div className="p-6">
+				<div className="max-w-7xl mx-auto space-y-6">
+					<div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+						<div>
+							<Skeleton className="h-10 w-48 mb-2" />
+							<Skeleton className="h-5 w-96" />
+						</div>
+						<Skeleton className="h-10 w-40" />
+					</div>
+					<div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+						<Skeleton className="h-10 w-full md:w-3/4 rounded-lg" />
+						<Skeleton className="h-10 w-full md:w-1/4 rounded-lg" />
+					</div>
+					<Skeleton className="h-12 w-full rounded-lg" />
+					<Skeleton className="h-96 w-full rounded-lg" />
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className="p-6" key={Date.now()}>
+		<div className="p-6">
 			<div className="max-w-7xl mx-auto space-y-6">
 				{/* Header */}
 				<div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">

@@ -33,7 +33,7 @@ import { ProfileService, ProfileUpdateData } from '@/lib/profile';
 import { InvestmentService } from '@/lib/investments';
 
 export default function ProfilePage() {
-	const { user, userProfile } = useAuth();
+	const { user, userProfile, loading: authLoading } = useAuth();
 	const [isEditing, setIsEditing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [success, setSuccess] = useState(false);
@@ -141,12 +141,17 @@ export default function ProfilePage() {
 		}
 	};
 
+	// Handle authentication loading state
+	if (authLoading) {
+		return <ProfilePageSkeleton />;
+	}
+
 	if (!user || !userProfile) {
 		return <ProfilePageSkeleton />;
 	}
 
 	return (
-		<div className="p-4 md:p-6" key={Date.now()}>
+		<div className="p-4 md:p-6">
 			<div className="max-w-4xl mx-auto space-y-6">
 				{/* Header */}
 				<div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">

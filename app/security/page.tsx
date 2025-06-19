@@ -36,7 +36,7 @@ import {
 import { useAuth } from '@/components/auth/AuthProvider';
 
 export default function SecurityPage() {
-	const { user } = useAuth();
+	const { user, loading: authLoading } = useAuth();
 	const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -182,8 +182,32 @@ export default function SecurityPage() {
 		console.log('Terminate session:', sessionId);
 	};
 
+	// Handle authentication loading state
+	if (authLoading) {
+		return (
+			<div className="p-4 md:p-6">
+				<div className="max-w-4xl mx-auto space-y-6">
+					<Skeleton className="h-10 w-64 mb-2" />
+					<Skeleton className="h-4 w-96" />
+					<div className="grid gap-6 lg:grid-cols-3">
+						<div className="lg:col-span-2 space-y-6">
+							{Array.from({ length: 3 }).map((_, i) => (
+								<Skeleton key={i} className="h-64 w-full rounded-lg" />
+							))}
+						</div>
+						<div className="space-y-6">
+							{Array.from({ length: 2 }).map((_, i) => (
+								<Skeleton key={i} className="h-48 w-full rounded-lg" />
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className="p-4 md:p-6" key={Date.now()}>
+		<div className="p-4 md:p-6">
 			<div className="max-w-4xl mx-auto space-y-6">
 				{/* Header */}
 				<div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">

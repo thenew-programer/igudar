@@ -12,6 +12,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
+  Loader2,
   PieChart, 
   BarChart3, 
   List, 
@@ -21,7 +22,7 @@ import {
 } from 'lucide-react';
 
 export default function InvestmentsPage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [portfolioSummary, setPortfolioSummary] = useState<PortfolioSummaryType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -74,6 +75,11 @@ export default function InvestmentsPage() {
   const handleFiltersChange = (newFilters: InvestmentFilters) => {
     setFilters(newFilters);
   };
+
+  // Handle authentication loading state
+  if (authLoading) {
+    return <InvestmentsPageSkeleton />;
+  }
 
   if (loading) {
     return <InvestmentsPageSkeleton />;
@@ -132,7 +138,7 @@ export default function InvestmentsPage() {
   }
 
   return (
-    <div className="p-6" key={Date.now()}>
+    <div className="p-6">
       <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
         {/* Header */}
         <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
