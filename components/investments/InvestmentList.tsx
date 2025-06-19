@@ -345,7 +345,7 @@ export const InvestmentList: React.FC<InvestmentListProps> = ({
             <Button
               onClick={clearAllFilters}
               className="bg-igudar-primary hover:bg-igudar-primary/90 text-white"
-							Min: {filters.min_amount.toLocaleString()} MAD
+            >
               Clear Filters
             </Button>
           )}
@@ -357,7 +357,7 @@ export const InvestmentList: React.FC<InvestmentListProps> = ({
             : 'space-y-4'
         }>
           {filteredInvestments.map((investment) => (
-							Max: {filters.max_amount.toLocaleString()} MAD
+            <InvestmentCard
               key={investment.id}
               investment={investment}
               showPerformance={true}

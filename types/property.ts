@@ -48,6 +48,7 @@ export interface Property {
   // Investment Progress
   total_investors?: number; // Number of current investors
   funding_progress: number; // Funding progress percentage (0-100)
+  remaining_funding?: number; // Calculated remaining funding needed
 }
 
 export interface PropertyInsert {
@@ -84,6 +85,7 @@ export interface PropertyInsert {
   management_fee?: number;
   total_investors?: number;
   funding_progress?: number;
+  remaining_funding?: number;
 }
 
 export interface PropertyUpdate {
@@ -119,6 +121,7 @@ export interface PropertyUpdate {
   management_fee?: number;
   total_investors?: number;
   funding_progress?: number;
+  remaining_funding?: number;
   updated_at?: string;
 }
 
@@ -196,7 +199,7 @@ export interface InvestmentCalculation {
   expected_monthly_return: number;
   total_expected_return: number;
   roi_percentage: number;
-  payback_period_months: number;
+  payback_period_months?: number;
 }
 
 // Property Validation Errors

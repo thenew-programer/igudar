@@ -7,6 +7,7 @@ export interface Investment {
   
   // Investment Details
   investment_amount: number; // Amount in MAD (cents)
+  investment_percentage?: number; // Calculated percentage of property ownership
   
   // Status and Transaction
   status: InvestmentStatus;
@@ -40,6 +41,7 @@ export interface InvestmentInsert {
   user_id: string;
   property_id: string;
   investment_amount: number;
+  investment_percentage?: number;
   status?: InvestmentStatus;
   transaction_id?: string;
   payment_method?: string;
@@ -48,6 +50,7 @@ export interface InvestmentInsert {
 
 export interface InvestmentUpdate {
   investment_amount?: number;
+  investment_percentage?: number;
   status?: InvestmentStatus;
   transaction_id?: string;
   payment_method?: string;
@@ -86,6 +89,7 @@ export interface InvestmentPerformance {
   return_amount: number;
   roi_percentage: number;
   months_held: number;
+  investment_percentage: number; // Percentage ownership of the property
   performance_trend: 'up' | 'down' | 'stable';
 }
 
@@ -97,6 +101,7 @@ export interface PortfolioBreakdown {
   percentage_of_portfolio: number;
   number_of_properties: number;
   average_roi: number;
+  average_ownership_percentage?: number; // Average ownership percentage per property type
 }
 
 // Investment Filters
