@@ -15,6 +15,22 @@ import {
 } from '@/types/property';
 import { DatabaseResponse } from '@/types/database';
 
+// Helper function to calculate risk assessment
+export const calculateRiskAssessment = (property: Property): 'low' | 'medium' | 'high' => {
+	// If expected_roi is 10% or more AND funding_progress is 80% or more, the risk is 'low'
+	if (property.expected_roi >= 10 && property.funding_progress >= 80) {
+		return 'low';
+	}
+	
+	// If expected_roi is less than 5% OR funding_progress is less than 50%, the risk is 'high'
+	if (property.expected_roi < 5 || property.funding_progress < 50) {
+		return 'high';
+	}
+	
+	// Otherwise, the risk is 'medium'
+	return 'medium';
+};
+
 export class PropertyService {
 
 	static async getProperties(
@@ -102,7 +118,12 @@ export class PropertyService {
 				...property,
 				funding_progress: property.target_amount > 0
 					? Math.round((property.total_raised / property.target_amount) * 100) : 0,
-				remaining_funding: property.target_amount - property.total_raised
+				remaining_funding: property.target_amount - property.total_raised,
+				risk_assessment: calculateRiskAssessment({
+					...property,
+					funding_progress: property.target_amount > 0
+						? Math.round((property.total_raised / property.target_amount) * 100) : 0
+				})
 			}));
 
 			return {
@@ -144,7 +165,12 @@ export class PropertyService {
 				...data,
 				funding_progress: data.target_amount > 0
 					? Math.round((data.total_raised / data.target_amount) * 100) : 0,
-				remaining_funding: data.target_amount - data.total_raised
+				remaining_funding: data.target_amount - data.total_raised,
+				risk_assessment: calculateRiskAssessment({
+					...data,
+					funding_progress: data.target_amount > 0
+						? Math.round((data.total_raised / data.target_amount) * 100) : 0
+				})
 			};
 
 			return {
@@ -180,6 +206,10 @@ export class PropertyService {
 			const propertyData = {
 				...property,
 				funding_progress,
+				risk_assessment: calculateRiskAssessment({
+					...property,
+					funding_progress
+				}),
 				total_raised: property.total_raised || 0,
 				status: property.status || PropertyStatus.DRAFT,
 				total_investors: property.total_investors || 0,
@@ -232,10 +262,16 @@ export class PropertyService {
 					const current = currentProperty.data;
 					const newTotalRaised = updates.total_raised ?? current.total_raised;
 					const newTargetAmount = updates.target_amount ?? current.target_amount;
-
-					calculatedUpdates.funding_progress = newTargetAmount > 0
+					const newFundingProgress = newTargetAmount > 0
 						? Math.round((newTotalRaised / newTargetAmount) * 100)
 						: 0;
+
+					calculatedUpdates.funding_progress = newFundingProgress;
+					calculatedUpdates.risk_assessment = calculateRiskAssessment({
+						...current,
+						expected_roi: updates.expected_roi ?? current.expected_roi,
+						funding_progress: newFundingProgress
+					});
 				}
 			}
 

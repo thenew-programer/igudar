@@ -49,6 +49,7 @@ export interface Property {
   total_investors?: number; // Number of current investors
   funding_progress: number; // Funding progress percentage (0-100)
   remaining_funding?: number; // Calculated remaining funding needed
+  risk_assessment?: 'low' | 'medium' | 'high'; // Risk level assessment
 }
 
 export interface PropertyInsert {
@@ -86,6 +87,7 @@ export interface PropertyInsert {
   total_investors?: number;
   funding_progress?: number;
   remaining_funding?: number;
+  risk_assessment?: 'low' | 'medium' | 'high';
 }
 
 export interface PropertyUpdate {
@@ -122,6 +124,7 @@ export interface PropertyUpdate {
   total_investors?: number;
   funding_progress?: number;
   remaining_funding?: number;
+  risk_assessment?: 'low' | 'medium' | 'high';
   updated_at?: string;
 }
 

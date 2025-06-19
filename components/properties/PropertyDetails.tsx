@@ -13,6 +13,8 @@ import {
   Clock,
   Building2,
   Users,
+  AlertTriangle,
+  ShieldCheck,
   Target
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -47,6 +49,36 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
       return `${years} ${years === 1 ? 'year' : 'years'} ${months} months`;
     }
   };
+
+  // Get risk assessment color
+  const getRiskColor = (risk?: 'low' | 'medium' | 'high'): string => {
+    switch (risk) {
+      case 'low':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'high':
+        return 'bg-red-100 text-red-800 border-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  // Get risk assessment icon
+  const getRiskIcon = (risk?: 'low' | 'medium' | 'high') => {
+    switch (risk) {
+      case 'low':
+        return ShieldCheck;
+      case 'medium':
+        return TrendingUp;
+      case 'high':
+        return AlertTriangle;
+      default:
+        return TrendingUp;
+    }
+  };
+
+  const RiskIcon = getRiskIcon(property.risk_assessment);
 
   return (
     <div className="space-y-6">
@@ -161,6 +193,16 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
                 <span className="font-semibold text-igudar-text">
                   {formatPrice(property.min_investment / 100)}
                 </span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center text-igudar-text-secondary">
+                  <RiskIcon className="mr-2 h-4 w-4" />
+                  <span>Risk Assessment</span>
+                </div>
+                <Badge className={`${getRiskColor(property.risk_assessment)}`}>
+                  {property.risk_assessment ? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` : 'Unknown Risk'}
+                </Badge>
               </div>
             </div>
           </div>
