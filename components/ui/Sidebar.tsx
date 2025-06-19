@@ -20,7 +20,8 @@ import {
   LogOut,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  FileText
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -87,6 +88,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       name: 'Portfolio',
       href: '/portfolio',
       icon: PieChart,
+    },
+    {
+      name: 'Documents',
+      href: '/documents',
+      icon: FileText,
     },
   ];
 
