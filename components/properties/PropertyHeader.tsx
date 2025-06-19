@@ -18,6 +18,8 @@ import {
 	Home,
 	Factory,
 	Hotel,
+	AlertTriangle,
+	ShieldCheck,
 	Landmark,
 	Building,
 	Copy,
@@ -74,6 +76,34 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 		}
 	};
 
+	// Get risk assessment color
+	const getRiskColor = (risk?: 'low' | 'medium' | 'high'): string => {
+		switch (risk) {
+			case 'low':
+				return 'bg-green-100 text-green-800 border-green-200';
+			case 'medium':
+				return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+			case 'high':
+				return 'bg-red-100 text-red-800 border-red-200';
+			default:
+				return 'bg-gray-100 text-gray-800 border-gray-200';
+		}
+	};
+
+	// Get risk assessment icon
+	const getRiskIcon = (risk?: 'low' | 'medium' | 'high') => {
+		switch (risk) {
+			case 'low':
+				return ShieldCheck;
+			case 'medium':
+				return TrendingUp;
+			case 'high':
+				return AlertTriangle;
+			default:
+				return TrendingUp;
+		}
+	};
+
 	// Calculate days remaining
 	const getDaysRemaining = (): number => {
 		const deadline = new Date(property.funding_deadline);
@@ -84,6 +114,7 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 	};
 
 	const PropertyTypeIcon = getPropertyTypeIcon(property.property_type);
+	const RiskIcon = getRiskIcon(property.risk_assessment);
 	const daysRemaining = getDaysRemaining();
 
 	// Generate share URL
@@ -165,6 +196,12 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 					<Badge variant="outline" className="border-igudar-primary/20 text-igudar-primary bg-igudar-primary/5 px-3 py-1">
 						<Calendar className="mr-1 h-3 w-3" />
 						{daysRemaining > 0 ? `${daysRemaining} days left` : 'Funding ended'}
+					</Badge>
+
+					{/* Risk Assessment Badge */}
+					<Badge variant="outline" className={`${getRiskColor(property.risk_assessment)} px-3 py-1`}>
+						<RiskIcon className="mr-1 h-3 w-3" />
+						{property.risk_assessment ? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` : 'Unknown Risk'}
 					</Badge>
 				</div>
 
