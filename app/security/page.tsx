@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
+import { ProfileService, PasswordUpdateData } from '@/lib/profile';
 import {
 	Shield,
 	Key,
@@ -38,6 +39,8 @@ export default function SecurityPage() {
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
 	const [showQRCode, setShowQRCode] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [passwordSuccess, setPasswordSuccess] = useState(false);
 	const [backupCodes, setBackupCodes] = useState<string[]>([]);
 	const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
@@ -90,9 +93,60 @@ export default function SecurityPage() {
 		setSecuritySettings(prev => ({ ...prev, [setting]: value }));
 	};
 
-	const handlePasswordSubmit = () => {
-		// Handle password change logic
-		console.log('Password change submitted');
+	const handlePasswordSubmit = async () => {
+		if (!user?.id) return;
+		
+		// Validate passwords
+		if (!passwordForm.currentPassword) {
+			setError('Current password is required');
+			return;
+		}
+		
+		if (!passwordForm.newPassword) {
+			setError('New password is required');
+			return;
+		}
+		
+		if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+			setError('New passwords do not match');
+			return;
+		}
+		
+		if (passwordForm.newPassword.length < 8) {
+			setError('New password must be at least 8 characters long');
+			return;
+		}
+		
+		setIsSubmitting(true);
+		setError(null);
+		
+		try {
+			const result = await ProfileService.updatePassword(user.id, {
+				currentPassword: passwordForm.currentPassword,
+				newPassword: passwordForm.newPassword
+			});
+			
+			if (result.success) {
+				setPasswordSuccess(true);
+				setPasswordForm({
+					currentPassword: '',
+					newPassword: '',
+					confirmPassword: ''
+				});
+				
+				// Hide success message after 3 seconds
+				setTimeout(() => {
+					setPasswordSuccess(false);
+				}, 3000);
+			} else {
+				setError(result.error || 'Failed to update password');
+			}
+		} catch (err) {
+			setError('An unexpected error occurred. Please try again.');
+			console.error('Password update error:', err);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	const handleEnable2FA = () => {
@@ -152,8 +206,23 @@ export default function SecurityPage() {
 								<CardDescription>
 									Update your password to keep your account secure
 								</CardDescription>
+								{passwordSuccess && (
+									<Alert className="mt-4 border-green-200 bg-green-50">
+										<CheckCircle className="h-4 w-4 text-green-600" />
+										<AlertDescription className="text-green-800">
+											Password updated successfully!
+										</AlertDescription>
+									</Alert>
+								)}
 							</CardHeader>
 							<CardContent className="space-y-4">
+								{error && (
+									<Alert variant="destructive">
+										<AlertCircle className="h-4 w-4" />
+										<AlertDescription>{error}</AlertDescription>
+									</Alert>
+								)}
+								
 								<div className="space-y-2">
 									<Label htmlFor="current-password">Current Password</Label>
 									<div className="relative">
@@ -217,9 +286,20 @@ export default function SecurityPage() {
 								<div className="pt-4">
 									<Button
 										onClick={handlePasswordSubmit}
-										className="bg-igudar-primary hover:bg-igudar-primary/90 text-white"
+										disabled={isSubmitting}
+										className="bg-igudar-primary hover:bg-igudar-primary/90 text-white flex items-center"
 									>
-										Update Password
+										{isSubmitting ? (
+											<>
+												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+												Updating...
+											</>
+										) : (
+											<>
+												<Save className="mr-2 h-4 w-4" />
+												Update Password
+											</>
+										)}
 									</Button>
 								</div>
 							</CardContent>
@@ -298,7 +378,12 @@ export default function SecurityPage() {
 
 										<div className="space-y-2">
 											<Label>Enter verification code</Label>
-											<Input placeholder="Enter 6-digit code from your app" />
+											<Input 
+												placeholder="Enter 6-digit code from your app" 
+												maxLength={6}
+												pattern="[0-9]*"
+												inputMode="numeric"
+											/>
 										</div>
 
 										<div className="flex space-x-3">
@@ -363,7 +448,9 @@ export default function SecurityPage() {
 										<Button
 											variant="destructive"
 											onClick={handleDisable2FA}
+											className="flex items-center"
 										>
+											<Lock className="mr-2 h-4 w-4" />
 											Disable 2FA
 										</Button>
 									</div>

@@ -25,9 +25,12 @@ import {
   Star,
   TrendingUp,
   Building2,
-  DollarSign
+  DollarSign,
+  Loader2
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { ProfileService, ProfileUpdateData } from '@/lib/profile';
+import { InvestmentService } from '@/lib/investments';
 
 export default function ProfilePage() {
   const { user, userProfile } = useAuth();
@@ -35,8 +38,13 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [portfolioStats, setPortfolioStats] = useState({
+    totalProperties: 0,
+    totalInvested: 0,
+    portfolioROI: 0
+  });
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProfileUpdateData>({
     full_name: '',
     email: '',
     phone: '',
@@ -54,24 +62,56 @@ export default function ProfilePage() {
     }
   }, [userProfile]);
 
+  // Fetch portfolio stats
+  useEffect(() => {
+    const fetchPortfolioStats = async () => {
+      if (!user?.id) return;
+      
+      try {
+        const result = await InvestmentService.getPortfolioSummary(user.id);
+        
+        if (result.success && result.data) {
+          setPortfolioStats({
+            totalProperties: result.data.total_properties,
+            totalInvested: result.data.total_invested,
+            portfolioROI: result.data.roi_percentage
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching portfolio stats:', err);
+      }
+    };
+    
+    fetchPortfolioStats();
+  }, [user?.id]);
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSave = async () => {
+    if (!user?.id) return;
+    
     setLoading(true);
     setError(null);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await ProfileService.updateProfile(user.id, formData);
       
-      setSuccess(true);
-      setIsEditing(false);
-      
-      setTimeout(() => setSuccess(false), 3000);
+      if (result.success) {
+        setSuccess(true);
+        setIsEditing(false);
+        
+        // Refresh the page to update the user data
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        setError(result.error || 'Failed to update profile');
+      }
     } catch (err) {
-      setError('Failed to update profile. Please try again.');
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Profile update error:', err);
     } finally {
       setLoading(false);
     }
@@ -213,7 +253,7 @@ export default function ProfilePage() {
                     <Input
                       id="phone"
                       type="tel"
-                      value={formData.phone}
+                      value={formData.phone || ''}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       disabled={!isEditing}
                       placeholder="+212 6XX XXX XXX"
@@ -246,7 +286,7 @@ export default function ProfilePage() {
                     >
                       {loading ? (
                         <>
-                          <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Saving...
                         </>
                       ) : (
@@ -359,7 +399,7 @@ export default function ProfilePage() {
                     <Building2 className="h-4 w-4 text-igudar-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold text-igudar-text">5</div>
+                    <div className="font-semibold text-igudar-text">{portfolioStats.totalProperties}</div>
                     <div className="text-xs text-igudar-text-muted">Properties Invested</div>
                   </div>
                 </div>
@@ -369,7 +409,7 @@ export default function ProfilePage() {
                     <DollarSign className="h-4 w-4 text-green-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-igudar-text">125,000 MAD</div>
+                    <div className="font-semibold text-igudar-text">{portfolioStats.totalInvested.toLocaleString()} MAD</div>
                     <div className="text-xs text-igudar-text-muted">Total Invested</div>
                   </div>
                 </div>
@@ -379,7 +419,9 @@ export default function ProfilePage() {
                     <TrendingUp className="h-4 w-4 text-blue-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-igudar-text">+12.5%</div>
+                    <div className="font-semibold text-igudar-text">
+                      {portfolioStats.portfolioROI > 0 ? '+' : ''}{portfolioStats.portfolioROI.toFixed(1)}%
+                    </div>
                     <div className="text-xs text-igudar-text-muted">Portfolio ROI</div>
                   </div>
                 </div>
