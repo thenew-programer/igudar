@@ -101,8 +101,8 @@ export class PropertyService {
 			const propertiesWithProgress = (data || []).map(property => ({
 				...property,
 				funding_progress: property.target_amount > 0
-					? Math.round((property.total_raised / property.target_amount) * 100)
-					: 0
+					? Math.round((property.total_raised / property.target_amount) * 100) : 0,
+				remaining_funding: property.target_amount - property.total_raised
 			}));
 
 			return {
@@ -143,8 +143,8 @@ export class PropertyService {
 			const propertyWithProgress = {
 				...data,
 				funding_progress: data.target_amount > 0
-					? Math.round((data.total_raised / data.target_amount) * 100)
-					: 0
+					? Math.round((data.total_raised / data.target_amount) * 100) : 0,
+				remaining_funding: data.target_amount - data.total_raised
 			};
 
 			return {
