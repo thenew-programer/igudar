@@ -31,7 +31,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ align = 'end' }) => {
 
   const handleSignOut = async () => {
     try {
-  const { user, userProfile, signOut } = useAuth();
+      const { user, userProfile, signOut } = useAuth();
       router.push('/auth/login');
     } catch (error) {
       console.error('Sign out error:', error);
@@ -86,6 +86,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ align = 'end' }) => {
       label: 'Sign Out',
       icon: LogOut,
       action: signOut,
+    }
+  ];
+
   if (loading || !user) {
     return null;
   }
