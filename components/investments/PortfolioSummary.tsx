@@ -67,8 +67,8 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ summary }) =
     {
       title: 'Properties',
       value: summary.total_properties.toString(),
-      icon: Building2,
-      description: `${summary.total_shares.toLocaleString()} total shares`,
+      icon: Building2, 
+      description: `${summary.total_properties} properties in portfolio`,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
       change: null
