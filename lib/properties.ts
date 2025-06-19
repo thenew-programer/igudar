@@ -407,8 +407,10 @@ export class PropertyService {
 		property: Property,
 		investmentAmount: number
 	): InvestmentCalculation {
-		const sharesPurchased = Math.floor(investmentAmount / property.price_per_share);
-		const actualInvestmentAmount = sharesPurchased * property.price_per_share;
+		const actualInvestmentAmount = investmentAmount;
+		const investmentPercentage = property.target_amount > 0 
+			? (actualInvestmentAmount / property.target_amount) * 100 
+			: 0;
 
 		const expectedAnnualReturn = (actualInvestmentAmount * property.expected_roi) / 100;
 		const expectedMonthlyReturn = expectedAnnualReturn / 12;
@@ -418,7 +420,7 @@ export class PropertyService {
 
 		return {
 			investment_amount: actualInvestmentAmount,
-			shares_purchased: sharesPurchased,
+			investment_percentage: investmentPercentage,
 			expected_annual_return: expectedAnnualReturn,
 			expected_monthly_return: expectedMonthlyReturn,
 			total_expected_return: totalExpectedReturn,
@@ -487,16 +489,6 @@ export class PropertyService {
 					field: 'size_sqm',
 					message: 'Size must be greater than 0',
 					code: 'INVALID_SIZE'
-				});
-			}
-		}
-
-		if ('total_shares' in property && property.total_shares !== undefined) {
-			if (property.total_shares <= 0) {
-				errors.push({
-					field: 'total_shares',
-					message: 'Total shares must be greater than 0',
-					code: 'INVALID_TOTAL_SHARES'
 				});
 			}
 		}

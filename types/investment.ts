@@ -6,9 +6,7 @@ export interface Investment {
   property_id: string;
   
   // Investment Details
-  shares_purchased: number;
   investment_amount: number; // Amount in MAD (cents)
-  purchase_price_per_share: number; // Price per share in MAD (cents)
   
   // Status and Transaction
   status: InvestmentStatus;
@@ -41,9 +39,7 @@ export interface InvestmentInsert {
   id?: string;
   user_id: string;
   property_id: string;
-  shares_purchased: number;
   investment_amount: number;
-  purchase_price_per_share: number;
   status?: InvestmentStatus;
   transaction_id?: string;
   payment_method?: string;
@@ -51,9 +47,7 @@ export interface InvestmentInsert {
 }
 
 export interface InvestmentUpdate {
-  shares_purchased?: number;
   investment_amount?: number;
-  purchase_price_per_share?: number;
   status?: InvestmentStatus;
   transaction_id?: string;
   payment_method?: string;
@@ -77,7 +71,7 @@ export interface PortfolioSummary {
   total_return: number; // Total return in MAD
   roi_percentage: number; // Overall ROI percentage
   total_properties: number; // Number of different properties invested in
-  total_shares: number; // Total shares owned
+  total_percentage: number; // Total ownership percentage across all properties
   active_investments: number; // Number of active investments
   monthly_return: number; // Expected monthly return in MAD
   annual_return: number; // Expected annual return in MAD

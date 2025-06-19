@@ -198,7 +198,14 @@ export class InvestmentService {
 
 			// Calculate portfolio metrics
 			const totalInvested = investments.reduce((sum, inv) => sum + inv.investment_amount, 0);
-			const totalShares = investments.reduce((sum, inv) => sum + inv.shares_purchased, 0);
+			const totalPercentage = investments.reduce((sum, inv) => {
+				const property = inv.properties;
+				if (!property) return sum;
+				const percentage = property.target_amount > 0 
+					? (inv.investment_amount / property.target_amount) * 100 
+					: 0;
+				return sum + percentage;
+			}, 0);
 			const uniqueProperties = new Set(investments.map(inv => inv.property_id)).size;
 
 			// Calculate current value with time-based growth
@@ -233,7 +240,7 @@ export class InvestmentService {
 				total_return: totalReturn / 100, // Convert from cents to MAD
 				roi_percentage: roiPercentage,
 				total_properties: uniqueProperties,
-				total_shares: totalShares,
+				total_percentage: totalPercentage,
 				active_investments: investments.length,
 				monthly_return: monthlyReturn / 100, // Convert from cents to MAD
 				annual_return: annualReturn / 100 // Convert from cents to MAD
@@ -535,45 +542,12 @@ export class InvestmentService {
 	static validateInvestment(investment: InvestmentInsert | InvestmentUpdate): InvestmentValidationResult {
 		const errors: InvestmentValidationError[] = [];
 
-		// Required fields validation (for insert)
-		if ('shares_purchased' in investment && investment.shares_purchased !== undefined) {
-			if (investment.shares_purchased <= 0) {
-				errors.push({
-					field: 'shares_purchased',
-					message: 'Shares purchased must be greater than 0',
-					code: 'INVALID_SHARES'
-				});
-			}
-		}
-
 		if ('investment_amount' in investment && investment.investment_amount !== undefined) {
 			if (investment.investment_amount <= 0) {
 				errors.push({
 					field: 'investment_amount',
 					message: 'Investment amount must be greater than 0',
 					code: 'INVALID_AMOUNT'
-				});
-			}
-		}
-
-		if ('purchase_price_per_share' in investment && investment.purchase_price_per_share !== undefined) {
-			if (investment.purchase_price_per_share <= 0) {
-				errors.push({
-					field: 'purchase_price_per_share',
-					message: 'Price per share must be greater than 0',
-					code: 'INVALID_PRICE_PER_SHARE'
-				});
-			}
-		}
-
-		// Validate calculation consistency
-		if ('shares_purchased' in investment && 'investment_amount' in investment && 'purchase_price_per_share' in investment) {
-			const expectedAmount = investment.shares_purchased! * investment.purchase_price_per_share!;
-			if (Math.abs(expectedAmount - investment.investment_amount!) > 1) { // Allow for rounding differences
-				errors.push({
-					field: 'investment_amount',
-					message: 'Investment amount does not match shares × price per share',
-					code: 'CALCULATION_MISMATCH'
 				});
 			}
 		}

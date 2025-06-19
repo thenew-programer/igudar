@@ -48,9 +48,6 @@ export interface Property {
   // Investment Progress
   total_investors?: number; // Number of current investors
   funding_progress: number; // Funding progress percentage (0-100)
-  shares_available: number; // Number of shares still available
-  total_shares: number; // Total number of shares
-  price_per_share: number; // Price per share in MAD
 }
 
 export interface PropertyInsert {
@@ -87,9 +84,6 @@ export interface PropertyInsert {
   management_fee?: number;
   total_investors?: number;
   funding_progress?: number;
-  shares_available: number;
-  total_shares: number;
-  price_per_share: number;
 }
 
 export interface PropertyUpdate {
@@ -125,9 +119,6 @@ export interface PropertyUpdate {
   management_fee?: number;
   total_investors?: number;
   funding_progress?: number;
-  shares_available?: number;
-  total_shares?: number;
-  price_per_share?: number;
   updated_at?: string;
 }
 
@@ -200,7 +191,7 @@ export interface PropertyStats {
 // Investment Calculation Results
 export interface InvestmentCalculation {
   investment_amount: number;
-  shares_purchased: number;
+  investment_percentage: number;
   expected_annual_return: number;
   expected_monthly_return: number;
   total_expected_return: number;
