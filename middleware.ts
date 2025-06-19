@@ -48,17 +48,17 @@ export async function middleware(req: NextRequest) {
 				return NextResponse.redirect(new URL('/auth/login', req.url));
 			}
 		}
+
+		return res;
 	} catch (error) {
 		// If there's an error with the session (e.g., invalid cookie), redirect to login
 		console.error('Auth middleware error:', error);
-		
+
 		// Only redirect to login if on a protected route
 		if (req.nextUrl.pathname !== '/auth/login' && req.nextUrl.pathname !== '/auth/register') {
 			return NextResponse.redirect(new URL('/auth/login', req.url));
 		}
 	}
-
-	return res;
 }
 
 export const config = {

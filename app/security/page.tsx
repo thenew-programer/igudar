@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
 import { ProfileService, PasswordUpdateData } from '@/lib/profile';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
 	Loader2,
 	AlertCircle,
