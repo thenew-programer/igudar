@@ -214,15 +214,12 @@ export const getUser = async (): Promise<AuthResponse> => {
 export const getSession = async () => {
 	try {
 		const { data: { session }, error } = await supabase.auth.getSession();
-
-		if (error) {
-			throw error;
-		}
-
+		
 		return {
 			success: true,
 			session,
-			user: session?.user || null
+			user: session?.user || null,
+			error
 		};
 
 	} catch (error) {
@@ -230,7 +227,8 @@ export const getSession = async () => {
 			success: false,
 			error: handleSupabaseError(error),
 			session: null,
-			user: null
+			user: null,
+			error
 		};
 	}
 };

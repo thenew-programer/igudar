@@ -45,7 +45,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		const initializeAuth = async () => {
 			setLoading(true);
 			try {
-				const { session } = await getSession();
+				const { session, error } = await getSession();
+				
+				if (error) {
+					console.error('Error getting initial session:', error);
+					setUser(null);
+					setUserProfile(null);
+					setLoading(false);
+					
+					// If there's an auth error and we're not on a login page, redirect to login
+					if (typeof window !== 'undefined' && 
+						!window.location.pathname.includes('/auth/login') && 
+						!window.location.pathname.includes('/auth/register')) {
+						window.location.href = '/auth/login';
+					}
+					return;
+				}
+				
 				const authUser = session?.user || null;
 				setUser(authUser);
 
@@ -73,6 +89,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 				setLoading(true);
 				const authUser = session?.user || null;
 				setUser(authUser);
+
+				if (event === 'SIGNED_OUT') {
+					// If signed out and not on login page, redirect to login
+					if (typeof window !== 'undefined' && 
+						!window.location.pathname.includes('/auth/login') && 
+						!window.location.pathname.includes('/auth/register')) {
+						window.location.href = '/auth/login';
+					}
+				}
 
 				if (authUser) {
 					// Ensure user profile exists in public.users table
@@ -119,7 +144,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 			setLoading(true);
 			if (document.visibilityState === 'visible') {
 				console.log('Tab is visible, re-checking session...');
-				// Explicitly get session to refresh it
+				try {
+					const { error } = await supabase.auth.getSession();
+					if (error) {
+						// If there's an error with the session, redirect to login
+						window.location.href = '/auth/login';
+						return;
+					}
+				} catch (error) {
+					console.error('Error checking session on visibility change:', error);
+				}
 				await supabase.auth.getSession();
 			}
 		};
