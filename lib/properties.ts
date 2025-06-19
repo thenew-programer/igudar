@@ -138,7 +138,6 @@ export class PropertyService {
 				throw error;
 			}
 
-			const propertiesWithProgress = (data || []).map(property => ({
 			const propertiesWithProgress = (data || []).map(property => {
 				// First calculate funding progress
 				const funding_progress = property.target_amount > 0
@@ -214,7 +213,6 @@ export class PropertyService {
 					data.expected_roi,
 					funding_progress
 				)
-			};
 			};
 
 			return {
