@@ -7,7 +7,10 @@ import { z } from 'zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
+<<<<<<< HEAD
 import Image from 'next/image';
+=======
+>>>>>>> 6109de2 (fix build issues)
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,11 +58,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
 			if (result.success) {
 				const redirectParam = searchParams.get('redirectTo') || redirectTo;
-				// if (onSuccess) {
-				// 	onSuccess();
-				// } else {
-				window.location.href = redirectParam;
-				// }
+				if (onSuccess) {
+					onSuccess();
+				} else {
+					window.location.href = redirectParam;
+				}
 			} else {
 				setError(result.error || 'Sign in failed. Please try again.');
 			}
@@ -73,6 +76,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 	return (
 		<div className="w-full">
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+<<<<<<< HEAD
 				<div className="flex items-center mb-10">
 					<Image 
 						src="/igudar.svg" 
@@ -89,6 +93,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 					<p className="text-gray-600">Sign in to access your dashboard and continue optimizing your QA process.</p>
 				</div>
 
+=======
+>>>>>>> 6109de2 (fix build issues)
 				{error && (
 					<Alert variant="destructive" className="border-red-200 bg-red-50">
 						<AlertDescription className="text-red-800">{error}</AlertDescription>

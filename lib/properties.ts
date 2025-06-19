@@ -3,7 +3,6 @@ import { revalidatePath } from 'next/cache';
 import {
 	Property,
 	PropertyRiskLevel,
-	PropertyRiskLevel,
 	PropertyInsert,
 	PropertyUpdate,
 	PropertyFilters,
@@ -26,31 +25,12 @@ export const calculateRiskAssessment = (
 	if (expected_roi >= 10 && funding_progress >= 80) {
 		return 'low';
 	}
-	
-	// If expected_roi is less than 5% OR funding_progress is less than 50%, the risk is 'high'
-	if (expected_roi < 5 || funding_progress < 50) {
-		return 'high';
-	}
-	
-	// Otherwise, the risk is 'medium'
-	return 'medium';
-};
 
-// Helper function to calculate risk assessment
-export const calculateRiskAssessment = (
-	expected_roi: number,
-	funding_progress: number
-): PropertyRiskLevel => {
-	// If expected_roi is 10% or more AND funding_progress is 80% or more, the risk is 'low'
-	if (expected_roi >= 10 && funding_progress >= 80) {
-		return 'low';
-	}
-	
 	// If expected_roi is less than 5% OR funding_progress is less than 50%, the risk is 'high'
 	if (expected_roi < 5 || funding_progress < 50) {
 		return 'high';
 	}
-	
+
 	// Otherwise, the risk is 'medium'
 	return 'medium';
 };
@@ -142,14 +122,14 @@ export class PropertyService {
 				// First calculate funding progress
 				const funding_progress = property.target_amount > 0
 					? Math.round((property.total_raised / property.target_amount) * 100) : 0;
-				
+
 				// Then add funding progress and remaining funding
 				const propertyWithProgress = {
 					...property,
 					funding_progress,
 					remaining_funding: property.target_amount - property.total_raised
 				};
-				
+
 				// Finally add risk assessment
 				return {
 					...propertyWithProgress,
@@ -198,14 +178,14 @@ export class PropertyService {
 			// First calculate funding progress
 			const funding_progress = data.target_amount > 0
 				? Math.round((data.total_raised / data.target_amount) * 100) : 0;
-			
+
 			// Then add funding progress and remaining funding
 			const propertyWithProgress = {
 				...data,
 				funding_progress,
 				remaining_funding: data.target_amount - data.total_raised
 			};
-			
+
 			// Finally add risk assessment
 			const propertyWithRisk = {
 				...propertyWithProgress,
@@ -267,7 +247,6 @@ export class PropertyService {
 			if (error) {
 				throw error;
 			}
-
 			return {
 				success: true,
 				data,
@@ -298,6 +277,7 @@ export class PropertyService {
 
 			let calculatedUpdates = { ...updates };
 
+			// Handle funding-related calculations
 			if (updates.total_raised !== undefined || updates.target_amount !== undefined) {
 				const currentProperty = await this.getPropertyById(id);
 				if (currentProperty.success && currentProperty.data) {
@@ -313,14 +293,6 @@ export class PropertyService {
 						updates.expected_roi ?? current.expected_roi,
 						newFundingProgress
 					);
-				}
-			}
-
-			if (updates.target_amount !== undefined) {
-				const currentProperty = await this.getPropertyById(id);
-				if (currentProperty.success && currentProperty.data) {
-					const current = currentProperty.data;
-					const newTargetAmount = updates.target_amount ?? current.target_amount;
 				}
 			}
 
@@ -355,6 +327,7 @@ export class PropertyService {
 			} catch (revalidateError) {
 				console.error('Error revalidating paths:', revalidateError);
 			}
+
 			return {
 				success: true,
 				data,
@@ -385,7 +358,6 @@ export class PropertyService {
 				success: true,
 				message: 'Property deleted successfully'
 			};
-
 
 		} catch (error) {
 			return {

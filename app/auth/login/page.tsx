@@ -1,6 +1,10 @@
 import React from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
+<<<<<<< HEAD
 import { Shield, Users, Star, BarChart3, Target, Zap } from 'lucide-react';
+=======
+import { TrendingUp, Shield, Users, Star, BarChart3, Target, Zap, Building2 } from 'lucide-react';
+>>>>>>> 6109de2 (fix build issues)
 import { Suspense } from 'react';
 import Image from 'next/image';
 
@@ -10,6 +14,39 @@ export default function LoginPage() {
 			{/* Left Side - Form */}
 			<div className="w-full lg:w-1/2 flex flex-col justify-center px-4 sm:px-6 lg:px-20 xl:px-24 bg-white">
 				<div className="w-full max-w-md mx-auto lg:mx-0">
+<<<<<<< HEAD
+=======
+					{/* Logo Section */}
+					<div className="mb-10">
+						<div className="flex items-center mb-6">
+							<Image
+								src="/igudar.png"
+								alt="IGUDAR Logo"
+								width={56}
+								height={56}
+								className="mr-4"
+							/>
+							<div className="ml-4">
+								<h1 className="text-3xl font-bold bg-gradient-to-r from-igudar-primary to-igudar-primary/80 bg-clip-text text-transparent">
+									IGUDAR
+								</h1>
+								<p className="text-sm text-slate-600 font-medium">
+									Real Estate Investment Platform
+								</p>
+							</div>
+						</div>
+
+						<div className="space-y-2">
+							<h2 className="text-3xl font-bold text-slate-900">
+								Welcome back
+							</h2>
+							<p className="text-lg text-slate-600">
+								Continue building your wealth through smart real estate investments
+							</p>
+						</div>
+					</div>
+
+>>>>>>> 6109de2 (fix build issues)
 					{/* Login Form */}
 					<Suspense fallback={<div>loading...</div>}>
 						<LoginForm />
