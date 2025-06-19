@@ -118,8 +118,8 @@ export const InvestmentCard: React.FC<InvestmentCardProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-igudar-text-secondary">Investment %</span>
-              <span className="font-semibold text-igudar-text">{investmentPercentage?.toFixed(2) || '0.00'}%</span>
+              <span className="text-sm text-igudar-text-secondary">Ownership %</span>
+              <span className="font-semibold text-igudar-text">{investmentPercentage.toFixed(2)}%</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-igudar-text-secondary">Target Amount</span>
