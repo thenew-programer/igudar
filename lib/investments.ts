@@ -184,7 +184,7 @@ export class InvestmentService {
 					total_return: 0,
 					roi_percentage: 0,
 					total_properties: 0,
-					total_shares: 0,
+					total_percentage: 0,
 					active_investments: 0,
 					monthly_return: 0,
 					annual_return: 0
@@ -202,8 +202,8 @@ export class InvestmentService {
 			const totalPercentage = investments.reduce((sum, inv) => {
 				const property = inv.properties;
 				if (!property) return sum;
-				const percentage = property.target_amount > 0 
-					? (inv.investment_amount / property.target_amount) * 100 
+				const percentage = property.target_amount > 0
+					? (inv.investment_amount / property.target_amount) * 100
 					: 0;
 				return sum + percentage;
 			}, 0);
@@ -304,10 +304,10 @@ export class InvestmentService {
 				const currentValue = initialValue * (1 + expectedGrowth);
 				const returnAmount = currentValue - initialValue;
 				const roiPercentage = (returnAmount / initialValue) * 100;
-				
+
 				// Calculate investment percentage
-				const investmentPercentage = property && property.target_amount > 0 
-					? (inv.investment_amount / property.target_amount) * 100 
+				const investmentPercentage = property && property.target_amount > 0
+					? (inv.investment_amount / property.target_amount) * 100
 					: 0;
 
 				// Determine performance trend

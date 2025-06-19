@@ -177,14 +177,9 @@ export class PropertyService {
 				? Math.round(((property.total_raised || 0) / property.target_amount) * 100)
 				: 0;
 
-			const price_per_share = property.total_shares > 0
-				? Math.round(property.target_amount / property.total_shares)
-				: 0;
-
 			const propertyData = {
 				...property,
 				funding_progress,
-				price_per_share,
 				total_raised: property.total_raised || 0,
 				status: property.status || PropertyStatus.DRAFT,
 				total_investors: property.total_investors || 0,
@@ -244,16 +239,11 @@ export class PropertyService {
 				}
 			}
 
-			if (updates.target_amount !== undefined || updates.total_shares !== undefined) {
+			if (updates.target_amount !== undefined) {
 				const currentProperty = await this.getPropertyById(id);
 				if (currentProperty.success && currentProperty.data) {
 					const current = currentProperty.data;
 					const newTargetAmount = updates.target_amount ?? current.target_amount;
-					const newTotalShares = updates.total_shares ?? current.total_shares;
-
-					calculatedUpdates.price_per_share = newTotalShares > 0
-						? Math.round(newTargetAmount / newTotalShares)
-						: 0;
 				}
 			}
 
@@ -408,8 +398,8 @@ export class PropertyService {
 		investmentAmount: number
 	): InvestmentCalculation {
 		const actualInvestmentAmount = investmentAmount;
-		const investmentPercentage = property.target_amount > 0 
-			? (actualInvestmentAmount / property.target_amount) * 100 
+		const investmentPercentage = property.target_amount > 0
+			? (actualInvestmentAmount / property.target_amount) * 100
 			: 0;
 
 		const expectedAnnualReturn = (actualInvestmentAmount * property.expected_roi) / 100;
