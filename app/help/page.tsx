@@ -198,7 +198,7 @@ export default function HelpPage() {
   };
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="p-4 md:p-6" key={user?.id || 'loading'}>
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-4">

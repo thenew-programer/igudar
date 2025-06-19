@@ -43,6 +43,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	useEffect(() => {
 		// Get initial session
 		const initializeAuth = async () => {
+			setLoading(true);
 			try {
 				const { session } = await getSession();
 				const authUser = session?.user || null;
@@ -69,6 +70,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		// Listen for auth changes
 		const { data: { subscription } } = supabase.auth.onAuthStateChange(
 			async (event, session) => {
+				setLoading(true);
 				const authUser = session?.user || null;
 				setUser(authUser);
 
@@ -114,6 +116,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	// New useEffect to handle tab visibility changes
 	useEffect(() => {
 		const handleVisibilityChange = async () => {
+			setLoading(true);
 			if (document.visibilityState === 'visible') {
 				console.log('Tab is visible, re-checking session...');
 				// Explicitly get session to refresh it
