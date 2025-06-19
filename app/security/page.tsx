@@ -11,7 +11,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
 import { ProfileService, PasswordUpdateData } from '@/lib/profile';
 import {
+	Loader2,
+	AlertCircle,
 	Shield,
+	Save,
 	Key,
 	Smartphone,
 	Eye,
@@ -43,6 +46,7 @@ export default function SecurityPage() {
 	const [passwordSuccess, setPasswordSuccess] = useState(false);
 	const [backupCodes, setBackupCodes] = useState<string[]>([]);
 	const [copiedCode, setCopiedCode] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null);
 
 	const [passwordForm, setPasswordForm] = useState({
 		currentPassword: '',
@@ -95,37 +99,37 @@ export default function SecurityPage() {
 
 	const handlePasswordSubmit = async () => {
 		if (!user?.id) return;
-		
+
 		// Validate passwords
 		if (!passwordForm.currentPassword) {
 			setError('Current password is required');
 			return;
 		}
-		
+
 		if (!passwordForm.newPassword) {
 			setError('New password is required');
 			return;
 		}
-		
+
 		if (passwordForm.newPassword !== passwordForm.confirmPassword) {
 			setError('New passwords do not match');
 			return;
 		}
-		
+
 		if (passwordForm.newPassword.length < 8) {
 			setError('New password must be at least 8 characters long');
 			return;
 		}
-		
+
 		setIsSubmitting(true);
 		setError(null);
-		
+
 		try {
 			const result = await ProfileService.updatePassword(user.id, {
 				currentPassword: passwordForm.currentPassword,
 				newPassword: passwordForm.newPassword
 			});
-			
+
 			if (result.success) {
 				setPasswordSuccess(true);
 				setPasswordForm({
@@ -133,7 +137,7 @@ export default function SecurityPage() {
 					newPassword: '',
 					confirmPassword: ''
 				});
-				
+
 				// Hide success message after 3 seconds
 				setTimeout(() => {
 					setPasswordSuccess(false);
@@ -222,7 +226,7 @@ export default function SecurityPage() {
 										<AlertDescription>{error}</AlertDescription>
 									</Alert>
 								)}
-								
+
 								<div className="space-y-2">
 									<Label htmlFor="current-password">Current Password</Label>
 									<div className="relative">
@@ -378,8 +382,8 @@ export default function SecurityPage() {
 
 										<div className="space-y-2">
 											<Label>Enter verification code</Label>
-											<Input 
-												placeholder="Enter 6-digit code from your app" 
+											<Input
+												placeholder="Enter 6-digit code from your app"
 												maxLength={6}
 												pattern="[0-9]*"
 												inputMode="numeric"

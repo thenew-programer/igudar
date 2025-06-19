@@ -25,7 +25,9 @@ import {
 	Plus,
 	Trash2,
 	Edit,
-	Loader2
+	Loader2,
+	MapPin,
+	Save
 } from 'lucide-react';
 import { ProfileService, PaymentMethod, BillingAddress } from '@/lib/profile';
 
@@ -158,13 +160,13 @@ export default function BillingPage() {
 
 			if (result.success) {
 				setFormSuccess(true);
-				
+
 				// Refresh payment methods
 				const updatedMethods = await ProfileService.getPaymentMethods(user.id);
 				if (updatedMethods.success) {
 					setPaymentMethods(updatedMethods.data || []);
 				}
-				
+
 				// Reset form and close dialog
 				setTimeout(() => {
 					setCardForm({
@@ -397,8 +399,8 @@ export default function BillingPage() {
 										</div>
 										<div className="flex space-x-2">
 											{!method.is_default && (
-												<Button 
-													variant="outline" 
+												<Button
+													variant="outline"
 													size="sm"
 													onClick={async () => {
 														if (!user?.id) return;
@@ -417,14 +419,14 @@ export default function BillingPage() {
 													Set Default
 												</Button>
 											)}
-											<Button 
-												variant="outline" 
+											<Button
+												variant="outline"
 												size="sm"
 												className="text-red-500 hover:text-red-700 hover:bg-red-50"
 												onClick={async () => {
 													if (!user?.id) return;
 													if (!confirm('Are you sure you want to remove this payment method?')) return;
-													
+
 													try {
 														await ProfileService.removePaymentMethod(user.id, method.id);
 														// Refresh payment methods
@@ -465,7 +467,7 @@ export default function BillingPage() {
 									<DialogHeader>
 										<DialogTitle>Add Payment Method</DialogTitle>
 									</DialogHeader>
-									
+
 									<div className="space-y-4 py-4">
 										{formSuccess ? (
 											<div className="text-center py-4">
@@ -483,7 +485,7 @@ export default function BillingPage() {
 														<AlertDescription>{formError}</AlertDescription>
 													</Alert>
 												)}
-												
+
 												<div className="space-y-2">
 													<Label htmlFor="cardNumber">Card Number</Label>
 													<Input
@@ -494,7 +496,7 @@ export default function BillingPage() {
 														maxLength={19}
 													/>
 												</div>
-												
+
 												<div className="space-y-2">
 													<Label htmlFor="cardHolder">Cardholder Name</Label>
 													<Input
@@ -504,12 +506,12 @@ export default function BillingPage() {
 														onChange={(e) => setCardForm(prev => ({ ...prev, cardHolder: e.target.value }))}
 													/>
 												</div>
-												
+
 												<div className="grid grid-cols-3 gap-4">
 													<div className="space-y-2">
 														<Label htmlFor="expiryMonth">Month</Label>
-														<Select 
-															value={cardForm.expiryMonth} 
+														<Select
+															value={cardForm.expiryMonth}
 															onValueChange={(value) => setCardForm(prev => ({ ...prev, expiryMonth: value }))}
 														>
 															<SelectTrigger id="expiryMonth">
@@ -524,11 +526,11 @@ export default function BillingPage() {
 															</SelectContent>
 														</Select>
 													</div>
-													
+
 													<div className="space-y-2">
 														<Label htmlFor="expiryYear">Year</Label>
-														<Select 
-															value={cardForm.expiryYear} 
+														<Select
+															value={cardForm.expiryYear}
 															onValueChange={(value) => setCardForm(prev => ({ ...prev, expiryYear: value }))}
 														>
 															<SelectTrigger id="expiryYear">
@@ -543,7 +545,7 @@ export default function BillingPage() {
 															</SelectContent>
 														</Select>
 													</div>
-													
+
 													<div className="space-y-2">
 														<Label htmlFor="cvv">CVV</Label>
 														<Input
@@ -555,7 +557,7 @@ export default function BillingPage() {
 														/>
 													</div>
 												</div>
-												
+
 												<div className="flex items-center space-x-2 pt-2">
 													<input
 														type="checkbox"
@@ -566,7 +568,7 @@ export default function BillingPage() {
 													/>
 													<Label htmlFor="setAsDefault" className="text-sm">Set as default payment method</Label>
 												</div>
-												
+
 												<Button
 													onClick={handleAddCard}
 													disabled={isSubmitting}
@@ -604,10 +606,10 @@ export default function BillingPage() {
 					<CardContent>
 						{loading ? (
 							<div className="space-y-2">
-								<Skeleton className="h-4 w-32" />
-								<Skeleton className="h-4 w-48" />
-								<Skeleton className="h-4 w-40" />
-								<Skeleton className="h-4 w-24" />
+								<div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+								<div className="h-4 w-48 bg-gray-200 rounded animate-pulse"></div>
+								<div className="h-4 w-40 bg-gray-200 rounded animate-pulse"></div>
+								<div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
 							</div>
 						) : billingAddress ? (
 							<div className="space-y-2">
@@ -620,10 +622,10 @@ export default function BillingPage() {
 									{billingAddress.city}, {billingAddress.postal_code}
 								</p>
 								<p className="text-igudar-text-secondary">{billingAddress.country}</p>
-								
+
 								<div className="pt-4">
-									<Button 
-										variant="outline" 
+									<Button
+										variant="outline"
 										size="sm"
 										onClick={() => setIsEditingAddress(true)}
 									>
@@ -639,7 +641,7 @@ export default function BillingPage() {
 								<p className="text-igudar-text-muted mb-4">
 									You haven't added a billing address yet.
 								</p>
-								<Button 
+								<Button
 									variant="outline"
 									onClick={() => setIsEditingAddress(true)}
 								>
@@ -648,7 +650,7 @@ export default function BillingPage() {
 								</Button>
 							</div>
 						)}
-						
+
 						{/* Edit Address Dialog */}
 						{isEditingAddress && (
 							<Dialog open={isEditingAddress} onOpenChange={setIsEditingAddress}>
@@ -656,7 +658,7 @@ export default function BillingPage() {
 									<DialogHeader>
 										<DialogTitle>{billingAddress ? 'Edit' : 'Add'} Billing Address</DialogTitle>
 									</DialogHeader>
-									
+
 									<div className="space-y-4 py-4">
 										{formError && (
 											<Alert variant="destructive">
@@ -664,7 +666,7 @@ export default function BillingPage() {
 												<AlertDescription>{formError}</AlertDescription>
 											</Alert>
 										)}
-										
+
 										<div className="space-y-2">
 											<Label htmlFor="fullName">Full Name</Label>
 											<Input
@@ -674,7 +676,7 @@ export default function BillingPage() {
 												onChange={(e) => setAddressForm(prev => ({ ...prev, full_name: e.target.value }))}
 											/>
 										</div>
-										
+
 										<div className="space-y-2">
 											<Label htmlFor="addressLine1">Address Line 1</Label>
 											<Input
@@ -684,7 +686,7 @@ export default function BillingPage() {
 												onChange={(e) => setAddressForm(prev => ({ ...prev, address_line1: e.target.value }))}
 											/>
 										</div>
-										
+
 										<div className="space-y-2">
 											<Label htmlFor="addressLine2">Address Line 2 (Optional)</Label>
 											<Input
@@ -694,7 +696,7 @@ export default function BillingPage() {
 												onChange={(e) => setAddressForm(prev => ({ ...prev, address_line2: e.target.value }))}
 											/>
 										</div>
-										
+
 										<div className="grid grid-cols-2 gap-4">
 											<div className="space-y-2">
 												<Label htmlFor="city">City</Label>
@@ -705,7 +707,7 @@ export default function BillingPage() {
 													onChange={(e) => setAddressForm(prev => ({ ...prev, city: e.target.value }))}
 												/>
 											</div>
-											
+
 											<div className="space-y-2">
 												<Label htmlFor="postalCode">Postal Code</Label>
 												<Input
@@ -716,11 +718,11 @@ export default function BillingPage() {
 												/>
 											</div>
 										</div>
-										
+
 										<div className="space-y-2">
 											<Label htmlFor="country">Country</Label>
-											<Select 
-												value={addressForm.country} 
+											<Select
+												value={addressForm.country}
 												onValueChange={(value) => setAddressForm(prev => ({ ...prev, country: value }))}
 											>
 												<SelectTrigger id="country">
@@ -735,25 +737,25 @@ export default function BillingPage() {
 												</SelectContent>
 											</Select>
 										</div>
-										
+
 										<Button
 											onClick={async () => {
 												if (!user?.id) return;
-												
+
 												// Basic validation
 												if (!addressForm.full_name || !addressForm.address_line1 || !addressForm.city || !addressForm.postal_code) {
 													setFormError('Please fill in all required fields');
 													return;
 												}
-												
+
 												setIsSubmitting(true);
 												setFormError(null);
-												
+
 												try {
 													const result = await ProfileService.updateBillingAddress(user.id, addressForm);
-													
+
 													if (result.success) {
-														setBillingAddress(result.data);
+														setBillingAddress(result.data ?? null);
 														setIsEditingAddress(false);
 													} else {
 														setFormError(result.error || 'Failed to update billing address');
@@ -783,7 +785,7 @@ export default function BillingPage() {
 									</div>
 								</DialogContent>
 							</Dialog>
-						</div>
+						)}
 					</CardContent>
 				</Card>
 
@@ -875,11 +877,11 @@ export default function BillingPage() {
 							<Button variant="outline" size="sm">
 								Update Tax Info
 							</Button>
-							
+
 							<Separator />
-							
+
 							<p className="text-sm text-igudar-text-muted">
-								Tax information is used for regulatory compliance and reporting purposes. 
+								Tax information is used for regulatory compliance and reporting purposes.
 								All financial transactions are subject to applicable tax laws in Morocco.
 							</p>
 						</div>
