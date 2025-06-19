@@ -7,16 +7,12 @@ import { z } from 'zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
-<<<<<<< HEAD
-import Image from 'next/image';
-=======
->>>>>>> 6109de2 (fix build issues)
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { signIn } from '@/lib/auth';
+import Image from 'next/image';
 
 const loginSchema = z.object({
 	email: z.string().email('Please enter a valid email address'),
@@ -76,25 +72,19 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 	return (
 		<div className="w-full">
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-<<<<<<< HEAD
-				<div className="flex items-center mb-10">
-					<Image 
-						src="/igudar.svg" 
-						alt="SoftQA" 
-						width={40} 
-						height={40} 
+				<div className="flex items-center justify-center mb-10">
+					<Image
+						src="/igudar.png"
+						alt="Igudar logo"
+						width={120}
+						height={120}
 						className="mr-3"
 					/>
-					<h1 className="text-xl font-semibold">SoftQA</h1>
 				</div>
-				
 				<div className="mb-8">
 					<h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
-					<p className="text-gray-600">Sign in to access your dashboard and continue optimizing your QA process.</p>
+					<p className="text-gray-600">Sign in to access your dashboard and continue your investment process.</p>
 				</div>
-
-=======
->>>>>>> 6109de2 (fix build issues)
 				{error && (
 					<Alert variant="destructive" className="border-red-200 bg-red-50">
 						<AlertDescription className="text-red-800">{error}</AlertDescription>
@@ -157,7 +147,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 							<input
 								id="remember-me"
 								name="remember-me"
-								type="checkbox" 
+								type="checkbox"
 								className="h-4 w-4 text-igudar-primary focus:ring-igudar-primary border-slate-300 rounded"
 							/>
 							<label htmlFor="remember-me" className="ml-2 block text-sm text-slate-700">
@@ -175,7 +165,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
 				<Button
 					type="submit"
-					className="w-full h-12 bg-[#0d3b3f] hover:bg-[#0d3b3f]/90 text-white font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-200"
+					className="w-full h-12 bg-[#5d18e9] hover:bg-[#5d18e9]/90 text-white font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-200"
 					disabled={isLoading}
 				>
 					{isLoading ? (
@@ -184,7 +174,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 							Signing in...
 						</>
 					) : (
-						<>  
+						<>
 							Sign In
 							<ArrowRight className="ml-2 h-5 w-5" />
 						</>
@@ -203,7 +193,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 				<Link href="/auth/register">
 					<Button
 						type="button"
-						variant="outline" 
+						variant="outline"
 						className="w-full h-12 border border-slate-300 hover:border-[#0d3b3f] hover:bg-[#0d3b3f]/5 text-slate-700 hover:text-[#0d3b3f] font-medium rounded-md transition-all duration-200"
 					>
 						Sign Up

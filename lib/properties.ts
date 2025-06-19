@@ -247,6 +247,7 @@ export class PropertyService {
 			if (error) {
 				throw error;
 			}
+
 			return {
 				success: true,
 				data,

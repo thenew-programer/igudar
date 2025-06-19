@@ -243,19 +243,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
 			} bg-white border-r border-border transition-all duration-300 ${className}`}>
 
 			{/* Desktop header */}
-			<div className={`flex items-center ${isCollapsed ? 'justify-center px-2' : 'justify-between px-4'} py-4 border-b border-border`}>
+			<div className={`flex items-center ${isCollapsed ? 'justify-between px-4' : 'justify-between px-4'} py-4 border-b border-border`}>
 				<Link href="/dashboard" className="flex items-center space-x-2">
-					<Image
-						src="/igudar.png"
-						alt="IGUDAR Logo"
-						width={40}
-						height={40}
-						className="mr-2"
-					/>
 					{!isCollapsed && (
-						<span className="text-xl font-bold text-igudar-primary transition-opacity duration-200">
-							IGUDAR
-						</span>
+						<Image
+							src="/igudar.png"
+							alt="IGUDAR Logo"
+							width={100}
+							height={100}
+							className="mr-2"
+						/>
+					)}
+					{isCollapsed && (
+						<Image
+							src="/igudar.png"
+							alt="IGUDAR Logo"
+							width={50}
+							height={50}
+							className="mr-2"
+						/>
+
 					)}
 				</Link>
 

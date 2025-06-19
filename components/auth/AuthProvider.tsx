@@ -41,45 +41,51 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	const t = getTranslation(language);
 
 	useEffect(() => {
+		let isMounted = true; // Prevent state updates if component unmounts
+
 		// Get initial session
 		const initializeAuth = async () => {
 			try {
-				setLoading(true);
 				const { session, error } = await getSession();
-				
+
+				if (!isMounted) return; // Check if component is still mounted
+
 				if (error) {
 					console.error('Error getting initial session:', error);
 					setUser(null);
 					setUserProfile(null);
-					
+
 					// If there's an auth error and we're not on a login page, redirect to login
-					if (typeof window !== 'undefined' && 
-						!window.location.pathname.includes('/auth/login') && 
+					if (typeof window !== 'undefined' &&
+						!window.location.pathname.includes('/auth/login') &&
 						!window.location.pathname.includes('/auth/register')) {
 						window.location.href = '/auth/login';
 					}
 					return;
 				}
-				
+
 				const authUser = session?.user || null;
 				setUser(authUser);
 
 				if (authUser) {
 					// Ensure user profile exists in public.users table
 					const profile = await ensureUserProfile(authUser);
-					setUserProfile(profile);
+					if (isMounted) {
+						setUserProfile(profile);
+					}
 				} else {
 					setUserProfile(null);
 				}
 			} catch (error) {
 				console.error('Error getting initial session:', error);
-				setUser(null);
-				setUserProfile(null);
-				console.error('Error getting initial session:', error);
-				setUser(null);
-				setUserProfile(null);
+				if (isMounted) {
+					setUser(null);
+					setUserProfile(null);
+				}
 			} finally {
-				setLoading(false);
+				if (isMounted) {
+					setLoading(false);
+				}
 			}
 		};
 
@@ -88,77 +94,83 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		// Listen for auth changes
 		const { data: { subscription } } = supabase.auth.onAuthStateChange(
 			async (event, session) => {
+				if (!isMounted) return;
+
 				setLoading(true);
-				const authUser = session?.user || null;
-				setUser(authUser);
 
-				if (event === 'SIGNED_OUT') {
-					// If signed out and not on login page, redirect to login
-					if (typeof window !== 'undefined' && 
-						!window.location.pathname.includes('/auth/login') && 
-						!window.location.pathname.includes('/auth/register')) {
-						window.location.href = '/auth/login';
+				try {
+					const authUser = session?.user || null;
+					setUser(authUser);
+
+					if (event === 'SIGNED_OUT') {
+						setUserProfile(null);
+						// If signed out and not on login page, redirect to login
+						if (typeof window !== 'undefined' &&
+							!window.location.pathname.includes('/auth/login') &&
+							!window.location.pathname.includes('/auth/register')) {
+							window.location.href = '/auth/login';
+						}
+					} else if (authUser) {
+						// Ensure user profile exists in public.users table
+						const profile = await ensureUserProfile(authUser);
+						if (isMounted) {
+							setUserProfile(profile);
+						}
+					} else {
+						setUserProfile(null);
 					}
-				}
 
-				if (authUser) {
-					// Ensure user profile exists in public.users table
-					const profile = await ensureUserProfile(authUser);
-					setUserProfile(profile);
-				} else {
-					setUserProfile(null);
-				}
-
-				setLoading(false);
-
-				// Handle different auth events
-				switch (event) {
-					case 'SIGNED_IN':
-						console.log('User signed in:', session?.user?.email);
-						break;
-					case 'SIGNED_OUT':
-						console.log('User signed out');
-						break;
-					case 'TOKEN_REFRESHED':
-						console.log('Token refreshed');
-						break;
-					case 'USER_UPDATED':
-						console.log('User updated');
-						break;
+					// Handle different auth events
+					switch (event) {
+						case 'SIGNED_IN':
+							console.log('User signed in:', session?.user?.email);
+							break;
+						case 'SIGNED_OUT':
+							console.log('User signed out');
+							break;
+						case 'TOKEN_REFRESHED':
+							console.log('Token refreshed');
+							break;
+						case 'USER_UPDATED':
+							console.log('User updated');
+							break;
+					}
+				} catch (error) {
+					console.error('Error in auth state change:', error);
+				} finally {
+					if (isMounted) {
+						setLoading(false);
+					}
 				}
 			}
 		);
 
 		// Load saved language preference
-		const savedLanguage = localStorage.getItem('igudar-language') as Language;
-		if (savedLanguage && ['en', 'ar', 'fr'].includes(savedLanguage)) {
-			setLanguage(savedLanguage);
+		if (typeof window !== 'undefined') {
+			const savedLanguage = localStorage.getItem('igudar-language') as Language;
+			if (savedLanguage && ['en', 'ar', 'fr'].includes(savedLanguage)) {
+				setLanguage(savedLanguage);
+			}
 		}
 
 		return () => {
+			isMounted = false;
 			subscription.unsubscribe();
 		};
 	}, []);
 
-	// New useEffect to handle tab visibility changes
+	// Simplified tab visibility handler - only refresh session, don't interfere with loading
 	useEffect(() => {
 		const handleVisibilityChange = async () => {
-			setLoading(true);
-			if (document.visibilityState === 'visible') {
-				console.log('Tab is visible, re-checking session...');
+			if (document.visibilityState === 'visible' && user) {
+				console.log('Tab is visible, refreshing session...');
 				try {
-					const { error } = await supabase.auth.getSession();
-					if (error) {
-						// If there's an error with the session, redirect to login
-						window.location.href = '/auth/login';
-						return;
-					}
+					// Just refresh the session silently, don't change loading state
+					await supabase.auth.getSession();
 				} catch (error) {
-					console.error('Error checking session on visibility change:', error);
+					console.error('Error refreshing session on visibility change:', error);
 				}
-				await supabase.auth.getSession();
 			}
-			setLoading(false);
 		};
 
 		document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -166,12 +178,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		return () => {
 			document.removeEventListener('visibilitychange', handleVisibilityChange);
 		};
-	}, []);
+	}, [user]);
 
 	// Update language and save preference
 	const handleSetLanguage = (lang: Language) => {
 		setLanguage(lang);
-		localStorage.setItem('igudar-language', lang);
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('igudar-language', lang);
+		}
 	};
 
 	// Sign out function
@@ -182,7 +196,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 			if (error) {
 				console.error('Sign out error:', error);
 			} else {
-				window.location.href = '/auth/login';
+				if (typeof window !== 'undefined') {
+					window.location.href = '/auth/login';
+				}
 			}
 		} catch (error) {
 			console.error('Sign out error:', error);
