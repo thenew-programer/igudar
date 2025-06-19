@@ -40,6 +40,13 @@ export const InvestmentList: React.FC<InvestmentListProps> = ({
   const [showFiltersPanel, setShowFiltersPanel] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
+  // Force refresh when investments change
+  useEffect(() => {
+    if (investments.length > 0) {
+      setFilters(prevFilters => ({...prevFilters}));
+    }
+  }, [investments.length]);
+
   // Filter investments based on search and filters
   const filteredInvestments = investments.filter(investment => {
     const property = investment.properties;
