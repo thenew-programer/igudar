@@ -1,4 +1,5 @@
 import { supabase, handleSupabaseError } from './supabase';
+import { revalidateAppPaths } from './supabase';
 import { DatabaseResponse } from '@/types/database';
 
 export interface DashboardStats {
@@ -96,6 +97,13 @@ export class DashboardService {
 				roiPercentage
 			};
 
+			// Revalidate relevant paths after successful update
+			try {
+				revalidateAppPaths()
+			} catch (revalidateError) {
+				console.error('Error revalidating paths:', revalidateError);
+			}
+
 			return {
 				success: true,
 				data: stats,
@@ -173,6 +181,12 @@ export class DashboardService {
 				});
 			}
 
+			// Revalidate relevant paths after successful update
+			try {
+				revalidateAppPaths()
+			} catch (revalidateError) {
+				console.error('Error revalidating paths:', revalidateError);
+			}
 			return {
 				success: true,
 				data: performanceData,
@@ -278,6 +292,13 @@ export class DashboardService {
 			activities.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 			const recentActivities = activities.slice(0, 10);
 
+			// Revalidate relevant paths after successful update
+			try {
+				revalidateAppPaths()
+			} catch (revalidateError) {
+				console.error('Error revalidating paths:', revalidateError);
+			}
+
 			return {
 				success: true,
 				data: recentActivities,
@@ -360,6 +381,13 @@ export class DashboardService {
 						color: colors[index % colors.length]
 					};
 				});
+
+			// Revalidate relevant paths after successful update
+			try {
+				revalidateAppPaths()
+			} catch (revalidateError) {
+				console.error('Error revalidating paths:', revalidateError);
+			}
 
 			return {
 				success: true,

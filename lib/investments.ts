@@ -1,5 +1,5 @@
 import { supabase, handleSupabaseError } from './supabase';
-import { revalidatePath } from 'next/cache';
+import { revalidateAppPaths } from './supabase';
 import {
 	Investment,
 	InvestmentInsert,
@@ -87,6 +87,12 @@ export class InvestmentService {
 				throw error;
 			}
 
+			// Revalidate relevant paths after successful update
+			try {
+				revalidateAppPaths()
+			} catch (revalidateError) {
+				console.error('Error revalidating paths:', revalidateError);
+			}
 			return {
 				success: true,
 				data: data || [],
@@ -445,12 +451,9 @@ export class InvestmentService {
 				throw error;
 			}
 
-			// Revalidate relevant paths after successful creation
+			// Revalidate relevant paths after successful update
 			try {
-				revalidatePath('/dashboard');
-				revalidatePath('/investments');
-				revalidatePath('/portfolio');
-				revalidatePath('/properties');
+				revalidateAppPaths()
 			} catch (revalidateError) {
 				console.error('Error revalidating paths:', revalidateError);
 			}
@@ -509,10 +512,7 @@ export class InvestmentService {
 
 			// Revalidate relevant paths after successful update
 			try {
-				revalidatePath('/dashboard');
-				revalidatePath('/investments');
-				revalidatePath('/portfolio');
-				revalidatePath('/properties');
+				revalidateAppPaths()
 			} catch (revalidateError) {
 				console.error('Error revalidating paths:', revalidateError);
 			}

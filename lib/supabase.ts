@@ -26,10 +26,6 @@ export const revalidateAppPaths = () => {
 		revalidatePath('/investments');
 		revalidatePath('/portfolio');
 		revalidatePath('/profile');
-		revalidatePath('/billing');
-		revalidatePath('/help');
-		revalidatePath('/settings');
-		revalidatePath('/security');
 	} catch (error) {
 		console.error('Error revalidating paths:', error);
 	}

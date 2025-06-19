@@ -1,5 +1,5 @@
 import { supabase, handleSupabaseError } from './supabase';
-import { revalidatePath } from 'next/cache';
+import { revalidateAppPaths } from './supabase';
 import { User } from '@supabase/supabase-js';
 import { User as DatabaseUser } from '@/types/database';
 
@@ -88,13 +88,13 @@ export const signUp = async (data: SignUpData): Promise<AuthResponse> => {
 			userProfile = await ensureUserProfile(authData.user);
 		}
 
-		// Revalidate auth-related paths
+		// Revalidate relevant paths after successful update
 		try {
-			revalidatePath('/dashboard');
-			revalidatePath('/profile');
+			revalidateAppPaths()
 		} catch (revalidateError) {
 			console.error('Error revalidating paths:', revalidateError);
 		}
+
 		return {
 			success: true,
 			user: authData.user,
@@ -132,10 +132,9 @@ export const signIn = async (data: SignInData): Promise<AuthResponse> => {
 
 		const userProfile = await ensureUserProfile(authData.user);
 
-		// Revalidate auth-related paths
+		// Revalidate relevant paths after successful update
 		try {
-			revalidatePath('/dashboard');
-			revalidatePath('/profile');
+			revalidateAppPaths()
 		} catch (revalidateError) {
 			console.error('Error revalidating paths:', revalidateError);
 		}
@@ -161,6 +160,12 @@ export const signOut = async (): Promise<AuthResponse> => {
 
 		if (error) {
 			throw error;
+		}
+
+		try {
+			revalidateAppPaths()
+		} catch (revalidateError) {
+			console.error('Error revalidating paths:', revalidateError);
 		}
 
 		return {
