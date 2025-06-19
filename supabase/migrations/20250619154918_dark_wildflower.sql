@@ -10,7 +10,8 @@
     - Update user_portfolios view to work with percentage model
     - Update property_analytics view
 */
-
+-- Drop the old function definition before recreating with new return type
+DROP FUNCTION IF EXISTS get_user_portfolio_summary(uuid);
 -- Update user portfolio summary function to work without shares
 CREATE OR REPLACE FUNCTION get_user_portfolio_summary(user_uuid uuid)
 RETURNS TABLE (
