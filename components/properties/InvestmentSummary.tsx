@@ -52,7 +52,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
     
     if (numAmount > 0 && property.target_amount > 0) {
       const actualAmount = numAmount;
-      const percentage = (actualAmount / (property.target_amount / 100)) * 100; // Convert target from cents to MAD
+      const percentage = (actualAmount / (property.target_amount / 100)) * 100; // Calculate percentage of target amount
       
       const annualReturn = (actualAmount * property.expected_roi) / 100;
       const monthlyReturn = annualReturn / 12;
@@ -95,6 +95,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
   const minInvestmentMAD = Math.max(property.min_investment / 100, 1000); // Ensure minimum 1000 MAD
   const targetAmountMAD = property.target_amount / 100; // Convert from cents
   const totalRaisedMAD = property.total_raised / 100; // Convert from cents
+  const remainingFundingMAD = targetAmountMAD - totalRaisedMAD;
 
   // AI-generated insights
   const getAIInsights = () => {
@@ -284,6 +285,11 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
               <span className="text-sm text-igudar-text-secondary">Amount Raised</span>
               <span className="font-semibold text-igudar-text">{formatPrice(totalRaisedMAD)}</span>
             </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-igudar-text-secondary">Remaining</span>
+              <span className="font-semibold text-igudar-text">{formatPrice(remainingFundingMAD)}</span>
+            </div>
           </div>
 
           <Separator />
@@ -344,6 +350,14 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
                     {formatPrice(calculatedReturns.total)}
                   </span>
                 </div>
+              </div>
+            )}
+
+            {/* Validation Messages */}
+            {investmentAmount && parseFloat(investmentAmount) > remainingFundingMAD && (
+              <div className="flex items-center text-red-600 text-sm">
+                <AlertCircle className="mr-1 h-3 w-3" />
+                <span>Investment exceeds remaining funding needed: {formatPrice(remainingFundingMAD)}</span>
               </div>
             )}
 
