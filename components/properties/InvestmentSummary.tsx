@@ -32,7 +32,7 @@ interface InvestmentSummaryProps {
 export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }) => {
   const { user } = useAuth();
   const [investmentAmount, setInvestmentAmount] = useState<string>('');
-  const [calculatedShares, setCalculatedShares] = useState<number>(0);
+  const [calculatedPercentage, setCalculatedPercentage] = useState<number>(0);
   const [calculatedReturns, setCalculatedReturns] = useState<{
     monthly: number;
     annual: number;
@@ -55,22 +55,22 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
   const calculateInvestment = (amount: string) => {
     const numAmount = parseFloat(amount) || 0;
     
-    if (numAmount > 0 && property.price_per_share > 0) {
-      const shares = Math.floor((numAmount * 100) / property.price_per_share); // Convert to cents
-      const actualAmount = (shares * property.price_per_share) / 100; // Convert back to MAD
+    if (numAmount > 0 && property.target_amount > 0) {
+      const actualAmount = numAmount;
+      const percentage = (actualAmount / (property.target_amount / 100)) * 100; // Convert target from cents to MAD
       
       const annualReturn = (actualAmount * property.expected_roi) / 100;
       const monthlyReturn = annualReturn / 12;
       const totalReturn = (annualReturn * property.investment_period) / 12;
       
-      setCalculatedShares(shares);
+      setCalculatedPercentage(percentage);
       setCalculatedReturns({
         monthly: monthlyReturn,
         annual: annualReturn,
         total: totalReturn
       });
     } else {
-      setCalculatedShares(0);
+      setCalculatedPercentage(0);
       setCalculatedReturns({ monthly: 0, annual: 0, total: 0 });
     }
   };
@@ -98,7 +98,6 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
                                daysRemaining === 0;
 
   const minInvestmentMAD = Math.max(property.min_investment / 100, 1000); // Ensure minimum 1000 MAD
-  const pricePerShareMAD = property.price_per_share / 100; // Convert from cents
   const targetAmountMAD = property.target_amount / 100; // Convert from cents
   const totalRaisedMAD = property.total_raised / 100; // Convert from cents
 
@@ -241,10 +240,9 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
             <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
               <div className="flex items-center justify-center text-green-600 mb-1">
                 <DollarSign className="mr-1 h-3 w-3" />
-                <span className="text-xs font-medium">Rental Yield</span>
+                <span className="text-xs font-medium">Min Investment</span>
               </div>
-              <div className="text-lg font-bold text-green-700">{property.rental_yield}%</div>
-              <div className="text-xs text-green-600">annually</div>
+              <div className="text-lg font-bold text-green-700">{formatPrice(minInvestmentMAD)}</div>
             </div>
 
             <div className="text-center p-3 bg-blue-50 rounded-lg border border-blue-200">
@@ -267,18 +265,18 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
           {/* Investment Details */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-igudar-text-secondary">Price per Share</span>
-              <span className="font-semibold text-igudar-text">{formatPrice(pricePerShareMAD)}</span>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-igudar-text-secondary">Shares Available</span>
-              <span className="font-semibold text-igudar-text">{property.shares_available.toLocaleString()}</span>
-            </div>
-            
-            <div className="flex items-center justify-between">
               <span className="text-sm text-igudar-text-secondary">Investment Period</span>
               <span className="font-semibold text-igudar-text">{Math.floor(property.investment_period / 12)} years</span>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-igudar-text-secondary">Funding Target</span>
+              <span className="font-semibold text-igudar-text">{formatPrice(targetAmountMAD)}</span>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-igudar-text-secondary">Amount Raised</span>
+              <span className="font-semibold text-igudar-text">{formatPrice(totalRaisedMAD)}</span>
             </div>
           </div>
 
@@ -304,17 +302,17 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
             </div>
 
             {/* Calculation Results */}
-            {calculatedShares > 0 && (
+            {calculatedPercentage > 0 && (
               <div className="space-y-3 p-4 bg-gray-50 rounded-lg border">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-igudar-text-secondary">Shares to Purchase</span>
-                  <span className="font-semibold text-igudar-text">{calculatedShares.toLocaleString()}</span>
+                  <span className="text-igudar-text-secondary">Investment Percentage</span>
+                  <span className="font-semibold text-igudar-text">{calculatedPercentage.toFixed(2)}%</span>
                 </div>
                 
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-igudar-text-secondary">Actual Investment</span>
                   <span className="font-semibold text-igudar-text">
-                    {formatPrice((calculatedShares * pricePerShareMAD))}
+                    {formatPrice(parseFloat(investmentAmount) || 0)}
                   </span>
                 </div>
                 
@@ -348,6 +346,13 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
               <div className="flex items-center text-red-600 text-sm">
                 <AlertCircle className="mr-1 h-3 w-3" />
                 <span>Minimum investment is {formatPrice(minInvestmentMAD)}</span>
+              </div>
+            )}
+            
+            {investmentAmount && parseFloat(investmentAmount) > (targetAmountMAD - totalRaisedMAD) && (
+              <div className="flex items-center text-red-600 text-sm">
+                <AlertCircle className="mr-1 h-3 w-3" />
+                <span>Investment exceeds remaining funding needed: {formatPrice(targetAmountMAD - totalRaisedMAD)}</span>
               </div>
             )}
           </div>
