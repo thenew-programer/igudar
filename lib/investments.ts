@@ -545,6 +545,36 @@ export class InvestmentService {
 		}
 	}
 
+	// Get user's ownership percentage for a specific property
+	static async getUserOwnershipPercentageForProperty(
+		userId: string,
+		propertyId: string
+	): Promise<DatabaseResponse<number>> {
+		try {
+			const { data, error } = await supabase.rpc('get_user_investment_percentage', {
+				user_uuid: userId,
+				property_uuid: propertyId
+			});
+
+			if (error) {
+				throw error;
+			}
+
+			return {
+				success: true,
+				data: data || 0,
+				message: 'User ownership percentage retrieved successfully'
+			};
+
+		} catch (error) {
+			return {
+				success: false,
+				error: handleSupabaseError(error),
+				message: 'Failed to retrieve user ownership percentage'
+			};
+		}
+	}
+
 	// Validate investment data
 	static validateInvestment(investment: InvestmentInsert | InvestmentUpdate): InvestmentValidationResult {
 		const errors: InvestmentValidationError[] = [];

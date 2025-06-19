@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Property } from '@/types/property';
 import { PropertyService } from '@/lib/properties';
+import { InvestmentService } from '@/lib/investments';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -15,6 +16,7 @@ import { PropertySpecs } from './PropertySpecs';
 import { PropertyMapView } from './PropertyMapView';
 import { X, ArrowLeft } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 interface PropertyModalProps {
   propertyId: string | null;
@@ -29,7 +31,9 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
 }) => {
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(false);
+  const [userOwnershipPercentage, setUserOwnershipPercentage] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -42,13 +46,25 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
       try {
         setLoading(true);
         setError(null);
-
+        setUserOwnershipPercentage(0);
+        
         const result = await PropertyService.getPropertyById(propertyId);
 
         if (result.success && result.data) {
           setProperty(result.data);
         } else {
           setError(result.error || 'Property not found');
+        }
+        
+        // If user is logged in, fetch their ownership percentage for this property
+        if (user?.id) {
+          const ownershipResult = await InvestmentService.getUserOwnershipPercentageForProperty(
+            user.id,
+            propertyId
+          );
+          if (ownershipResult.success && ownershipResult.data !== undefined) {
+            setUserOwnershipPercentage(ownershipResult.data);
+          }
         }
       } catch (err) {
         setError('Failed to load property details');
@@ -58,7 +74,7 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
       }
     };
 
-    fetchProperty();
+    if (isOpen) fetchProperty();
   }, [propertyId, isOpen]);
 
   const handleClose = () => {
@@ -150,7 +166,10 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
                   {/* Right Column - Investment Summary */}
                   <div className="lg:col-span-1">
                     <div className="sticky top-6">
-                      <InvestmentSummary property={property} />
+                      <InvestmentSummary 
+                        property={property} 
+                        userOwnershipPercentage={userOwnershipPercentage} 
+                      />
                     </div>
                   </div>
                 </div>

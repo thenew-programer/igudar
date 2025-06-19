@@ -28,9 +28,13 @@ import { formatPrice } from '@/lib/properties';
 
 interface InvestmentSummaryProps {
   property: Property;
+  userOwnershipPercentage?: number;
 }
 
-export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }) => {
+export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ 
+  property,
+  userOwnershipPercentage = 0
+}) => {
   const { user } = useAuth();
   const [investmentAmount, setInvestmentAmount] = useState<string>('');
   const [calculatedPercentage, setCalculatedPercentage] = useState<number>(0);
@@ -168,6 +172,17 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
         </CardHeader>
         
         <CardContent className="space-y-6">
+          {/* Current Ownership Display */}
+          {userOwnershipPercentage > 0 && (
+            <div className="p-4 bg-igudar-primary/10 rounded-lg border border-igudar-primary/20 text-center">
+              <h3 className="font-semibold text-igudar-primary mb-1">Your Current Ownership</h3>
+              <div className="text-2xl font-bold text-igudar-text">{userOwnershipPercentage.toFixed(2)}%</div>
+              <p className="text-xs text-igudar-text-muted mt-1">
+                You already own a stake in this property
+              </p>
+            </div>
+          )}
+
           {/* AI Insights Section */}
           {aiInsights.length > 0 && (
             <div className="space-y-3">
