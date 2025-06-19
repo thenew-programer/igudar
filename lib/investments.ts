@@ -270,7 +270,8 @@ export class InvestmentService {
           *,
           properties (
             title,
-            expected_roi
+            expected_roi,
+            target_amount
           )
         `)
 				.eq('user_id', userId)
@@ -302,6 +303,11 @@ export class InvestmentService {
 				const currentValue = initialValue * (1 + expectedGrowth);
 				const returnAmount = currentValue - initialValue;
 				const roiPercentage = (returnAmount / initialValue) * 100;
+				
+				// Calculate investment percentage
+				const investmentPercentage = property && property.target_amount > 0 
+					? (inv.investment_amount / property.target_amount) * 100 
+					: 0;
 
 				// Determine performance trend
 				let performanceTrend: 'up' | 'down' | 'stable' = 'stable';
@@ -316,6 +322,7 @@ export class InvestmentService {
 					return_amount: returnAmount / 100, // Convert from cents to MAD
 					roi_percentage: roiPercentage,
 					months_held: monthsHeld,
+					investment_percentage: investmentPercentage,
 					performance_trend: performanceTrend
 				};
 			});
