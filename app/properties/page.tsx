@@ -184,7 +184,7 @@ export default function PropertiesPage() {
 	}
 
 	return (
-		<div className="p-6">
+		<div className="p-6" key={user?.id || 'loading'}>
 			{/* Header */}
 			<div className="mb-8">
 				<h1 className="text-3xl md:text-4xl font-bold text-igudar-text mb-2">

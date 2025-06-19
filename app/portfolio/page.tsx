@@ -261,7 +261,7 @@ export default function PortfolioPage() {
 	}
 
 	return (
-		<div className="p-6">
+		<div className="p-6" key={user?.id || 'loading'}>
 			<div className="max-w-7xl mx-auto space-y-8">
 				{/* Header */}
 				<div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
