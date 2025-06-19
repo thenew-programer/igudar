@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
+import { formatPriceShort } from '@/lib/properties';
 
 interface PropertyFiltersProps {
   filters: PropertyFiltersType;
@@ -67,16 +68,6 @@ export const PropertyFilters: React.FC<PropertyFiltersProps> = ({
       : [...currentArray, value];
     
     updateFilter(key, newArray.length > 0 ? newArray : undefined);
-  };
-
-  // Format price for display
-  const formatPrice = (price: number): string => {
-    if (price >= 1000000) {
-      return `${(price / 1000000).toFixed(1)}M`;
-    } else if (price >= 1000) {
-      return `${(price / 1000).toFixed(0)}K`;
-    }
-    return price.toString();
   };
 
   return (
@@ -168,7 +159,7 @@ export const PropertyFilters: React.FC<PropertyFiltersProps> = ({
         {/* Price Range Filter */}
         <div className="space-y-3">
           <Label className="text-sm font-medium text-igudar-text">
-            Price Range: {formatPrice(filters.min_price || 0)} - {formatPrice(filters.max_price || 10000000)} MAD
+            Price Range: {formatPriceShort(filters.min_price || 0)} - {formatPriceShort(filters.max_price || 10000000)}
           </Label>
           <div className="space-y-4">
             <div>
@@ -226,7 +217,7 @@ export const PropertyFilters: React.FC<PropertyFiltersProps> = ({
         {/* Investment Range Filter */}
         <div className="space-y-3">
           <Label className="text-sm font-medium text-igudar-text">
-            Min Investment: {formatPrice(filters.min_investment || 0)} - {formatPrice(filters.max_investment || 500000)} MAD
+            Min Investment: {formatPriceShort(filters.min_investment || 0)} - {formatPriceShort(filters.max_investment || 500000)}
           </Label>
           <div className="space-y-4">
             <div>

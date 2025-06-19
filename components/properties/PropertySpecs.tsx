@@ -16,16 +16,7 @@ import {
   MapPin
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
-
-// Format price helper function
-const formatPrice = (price: number): string => {
-  if (price >= 1000000) {
-    return `${(price / 1000000).toFixed(1)}M MAD`;
-  } else if (price >= 1000) {
-    return `${(price / 1000).toFixed(0)}K MAD`;
-  }
-  return `${Math.round(price).toLocaleString()} MAD`;
-};
+import { formatPrice } from '@/lib/properties';
 
 interface PropertySpecsProps {
   property: Property;

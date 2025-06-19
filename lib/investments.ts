@@ -568,21 +568,26 @@ export class InvestmentService {
 
 // Utility functions for formatting
 export const formatInvestmentAmount = (amount: number): string => {
-	return new Intl.NumberFormat('fr-MA', {
-		style: 'currency',
-		currency: 'MAD',
+	const formatted = new Intl.NumberFormat('en-US', {
 		minimumFractionDigits: 0,
-		maximumFractionDigits: 0
+		maximumFractionDigits: 2
 	}).format(amount);
+	return formatted.replace(/,/g, ' ') + ' MAD';
 };
 
 export const formatInvestmentAmountShort = (amount: number): string => {
 	if (amount >= 1000000) {
-		return `${(amount / 1000000).toFixed(1)}M MAD`;
+		const value = (amount / 1000000).toFixed(2);
+		return `${value.replace(/\.?0+$/, '')}M MAD`;
 	} else if (amount >= 1000) {
-		return `${(amount / 1000).toFixed(0)}K MAD`;
+		const value = (amount / 1000).toFixed(2);
+		return `${value.replace(/\.?0+$/, '')}K MAD`;
 	}
-	return `${amount} MAD`;
+	const formatted = new Intl.NumberFormat('en-US', {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 2
+	}).format(amount);
+	return formatted.replace(/,/g, ' ') + ' MAD';
 };
 
 export const formatROI = (roi: number): string => {

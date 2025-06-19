@@ -501,21 +501,26 @@ export class PropertyService {
 }
 
 export const formatPrice = (price: number): string => {
-	return new Intl.NumberFormat('fr-MA', {
-		style: 'currency',
-		currency: 'MAD',
+	const formatted = new Intl.NumberFormat('en-US', {
 		minimumFractionDigits: 0,
-		maximumFractionDigits: 0
+		maximumFractionDigits: 2
 	}).format(price);
+	return formatted.replace(/,/g, ' ') + ' MAD';
 };
 
 export const formatPriceShort = (price: number): string => {
 	if (price >= 1000000) {
-		return `${(price / 1000000).toFixed(1)}M MAD`;
+		const value = (price / 1000000).toFixed(2);
+		return `${value.replace(/\.?0+$/, '')}M MAD`;
 	} else if (price >= 1000) {
-		return `${(price / 1000).toFixed(0)}K MAD`;
+		const value = (price / 1000).toFixed(2);
+		return `${value.replace(/\.?0+$/, '')}K MAD`;
 	}
-	return `${price} MAD`;
+	const formatted = new Intl.NumberFormat('en-US', {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 2
+	}).format(price);
+	return formatted.replace(/,/g, ' ') + ' MAD';
 };
 
 export const calculateROI = (

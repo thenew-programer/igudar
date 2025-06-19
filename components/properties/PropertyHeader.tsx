@@ -24,6 +24,7 @@ import {
 	Check
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { formatPrice } from '@/lib/properties';
 
 interface PropertyHeaderProps {
 	property: Property;
@@ -36,16 +37,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 	const [isSaved, setIsSaved] = useState(false);
 	const [copied, setCopied] = useState(false);
 	const [saving, setSaving] = useState(false);
-
-	// Format price in MAD
-	const formatPrice = (price: number): string => {
-		if (price >= 1000000) {
-			return `${(price / 1000000).toFixed(1)}M MAD`;
-		} else if (price >= 1000) {
-			return `${(price / 1000).toFixed(0)}K MAD`;
-		}
-		return `${price.toLocaleString()} MAD`;
-	};
 
 	// Get property type icon
 	const getPropertyTypeIcon = (type: PropertyType) => {

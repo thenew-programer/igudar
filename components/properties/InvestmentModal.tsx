@@ -22,6 +22,7 @@ import {
 	X
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { formatPrice } from '@/lib/properties';
 
 interface InvestmentModalProps {
 	property: Property | null;
@@ -53,15 +54,6 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 	}, [isOpen, prefilledAmount]);
 
 	if (!property) return null;
-
-	const formatPrice = (price: number): string => {
-		if (price >= 1000000) {
-			return `${(price / 1000000).toFixed(1)}M MAD`;
-		} else if (price >= 1000) {
-			return `${(price / 1000).toFixed(0)}K MAD`;
-		}
-		return `${Math.round(price).toLocaleString()} MAD`;
-	};
 
 	const minInvestmentMAD = Math.max(property.min_investment / 100, 1000);
 	const targetAmountMAD = property.target_amount / 100;

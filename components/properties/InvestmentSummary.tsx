@@ -24,6 +24,7 @@ import {
   PieChart
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { formatPrice } from '@/lib/properties';
 
 interface InvestmentSummaryProps {
   property: Property;
@@ -40,16 +41,6 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({ property }
   }>({ monthly: 0, annual: 0, total: 0 });
   const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
   const [prefilledAmount, setPrefilledAmount] = useState<string>('');
-
-  // Format price in MAD
-  const formatPrice = (price: number): string => {
-    if (price >= 1000000) {
-      return `${(price / 1000000).toFixed(1)}M MAD`;
-    } else if (price >= 1000) {
-      return `${(price / 1000).toFixed(0)}K MAD`;
-    }
-    return `${Math.round(price).toLocaleString()} MAD`;
-  };
 
   // Calculate investment details
   const calculateInvestment = (amount: string) => {

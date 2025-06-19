@@ -16,6 +16,7 @@ import {
   Target
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { formatPrice } from '@/lib/properties';
 
 interface PropertyDetailsProps {
   property: Property;
@@ -23,11 +24,6 @@ interface PropertyDetailsProps {
 
 export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
   const { t } = useAuth();
-
-  // Format price in MAD
-  const formatPrice = (price: number): string => {
-    return `${price.toLocaleString()} MAD`;
-  };
 
   // Format date
   const formatDate = (dateString: string): string => {

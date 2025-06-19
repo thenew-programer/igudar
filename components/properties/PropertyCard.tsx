@@ -17,6 +17,7 @@ import {
   Landmark,
   Building
 } from 'lucide-react';
+import { formatPrice } from '@/lib/properties';
 
 interface PropertyCardProps {
   property: Property;
@@ -29,16 +30,6 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   className = '',
   onViewDetails 
 }) => {
-  // Format price in MAD
-  const formatPrice = (price: number): string => {
-    if (price >= 1000000) {
-      return `${(price / 1000000).toFixed(1)}M MAD`;
-    } else if (price >= 1000) {
-      return `${(price / 1000).toFixed(0)}K MAD`;
-    }
-    return `${price.toLocaleString()} MAD`;
-  };
-
   // Get property type icon
   const getPropertyTypeIcon = (type: PropertyType) => {
     switch (type) {
