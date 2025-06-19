@@ -1,4 +1,5 @@
-import { supabase, handleSupabaseError, revalidateAppPaths } from './supabase';
+import { supabase, handleSupabaseError } from './supabase';
+import { revalidatePath } from 'next/cache';
 import { User as DatabaseUser } from '@/types/database';
 import { DatabaseResponse } from '@/types/database';
 
@@ -76,7 +77,8 @@ export class ProfileService {
 
       // Revalidate relevant paths
       try {
-        revalidateAppPaths();
+        revalidatePath('/profile');
+        revalidatePath('/dashboard');
       } catch (revalidateError) {
         console.error('Error revalidating paths:', revalidateError);
       }

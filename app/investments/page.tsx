@@ -132,7 +132,7 @@ export default function InvestmentsPage() {
   }
 
   return (
-    <div className="p-6" key={user?.id || 'loading'}>
+    <div className="p-6" key={Date.now()}>
       <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
         {/* Header */}
         <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">

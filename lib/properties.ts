@@ -1,5 +1,5 @@
 import { supabase, handleSupabaseError } from './supabase';
-import { revalidateAppPaths } from './supabase';
+import { revalidatePath } from 'next/cache';
 import {
 	Property,
 	PropertyRiskLevel,
@@ -310,7 +310,10 @@ export class PropertyService {
 
 			// Revalidate relevant paths after successful update
 			try {
-				revalidateAppPaths()
+				revalidatePath('/properties');
+				revalidatePath('/dashboard');
+				revalidatePath('/investments');
+				revalidatePath('/portfolio');
 			} catch (revalidateError) {
 				console.error('Error revalidating paths:', revalidateError);
 			}
@@ -338,13 +341,6 @@ export class PropertyService {
 
 			if (error) {
 				throw error;
-			}
-
-			// Revalidate relevant paths after successful update
-			try {
-				revalidateAppPaths()
-			} catch (revalidateError) {
-				console.error('Error revalidating paths:', revalidateError);
 			}
 
 			return {
@@ -409,13 +405,6 @@ export class PropertyService {
 					return acc;
 				}, {} as Record<PropertyStatus, number>)
 			};
-
-			// Revalidate relevant paths after successful update
-			try {
-				revalidateAppPaths()
-			} catch (revalidateError) {
-				console.error('Error revalidating paths:', revalidateError);
-			}
 
 			return {
 				success: true,
@@ -606,4 +595,3 @@ export const getPropertyTypeIcon = (type: PropertyType): string => {
 			return '🏠';
 	}
 };
-

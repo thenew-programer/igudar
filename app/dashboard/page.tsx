@@ -11,13 +11,21 @@ import { useAuth } from '@/components/auth/AuthProvider';
 export default function DashboardPage() {
 	const { user } = useAuth();
 	const pathname = usePathname();
-	const [renderKey, setRenderKey] = useState(0);
+	const [renderKey, setRenderKey] = useState<number>(Date.now());
 	const investmentOverviewRef = useRef<HTMLDivElement>(null);
 
 	// Force re-render on route changes AND user changes
 	useEffect(() => {
 		setRenderKey(Date.now());
-	}, [pathname, user?.id]);
+	}, [pathname]);
+
+	// Force re-render when user changes
+	useEffect(() => {
+		if (user?.id) {
+			setRenderKey(Date.now());
+		}
+	}, [user?.id]);
+
 	// Handle scroll behavior to stop at investment overview
 	useEffect(() => {
 		const handleScroll = () => {
