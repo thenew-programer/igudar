@@ -71,8 +71,8 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
   const handleAmountChange = (value: string) => {
     // Only allow numbers and decimal point
     const sanitizedValue = value.replace(/[^0-9.]/g, '');
-    setInvestmentAmount(sanititizedValue);
-    calculateInvestment(sanititizedValue);
+    setInvestmentAmount(sanitizedValue);
+    calculateInvestment(sanitizedValue);
   };
 
   // Calculate days remaining
