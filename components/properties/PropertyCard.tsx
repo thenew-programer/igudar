@@ -68,20 +68,6 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
     }
   };
 
-  // Get risk assessment color
-  const getRiskColor = (risk?: 'low' | 'medium' | 'high'): string => {
-    switch (risk) {
-      case 'low':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'high':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
   // Get risk assessment icon
   const getRiskIcon = (risk?: 'low' | 'medium' | 'high') => {
     switch (risk) {
@@ -160,13 +146,6 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           </Badge>
         </div>
         
-        {/* Risk Assessment Badge - Enhanced */}
-        <div className="absolute bottom-3 right-3">
-          <Badge variant="outline" className={`${getRiskColor(property.risk_assessment)} px-3 py-1.5 font-medium shadow-sm`}>
-            <RiskIcon className="mr-1.5 h-3.5 w-3.5" />
-            {property.risk_assessment ? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` : 'Unknown Risk'}
-          </Badge>
-        </div>
       </div>
 
       <CardContent className="p-4 space-y-4">

@@ -51,11 +51,9 @@ export default function PropertiesPage() {
 		fetchAllProperties();
 	}, []);
 
-	// Filter and search properties in real-time
 	const filteredProperties = useMemo(() => {
 		let filtered = [...allProperties];
 
-		// Apply search filter
 		if (searchTerm.trim()) {
 			const searchLower = searchTerm.toLowerCase().trim();
 			filtered = filtered.filter(property =>
@@ -67,7 +65,6 @@ export default function PropertiesPage() {
 			);
 		}
 
-		// Apply filters
 		if (filters.property_type && filters.property_type.length > 0) {
 			filtered = filtered.filter(property =>
 				filters.property_type!.includes(property.property_type)
