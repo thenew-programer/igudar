@@ -1,5 +1,4 @@
 import './globals.css';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/components/auth/AuthProvider';
@@ -66,7 +65,6 @@ export default function RootLayout({
 				<meta name="msapplication-TileColor" content="#5d18e9" />
 			</head>
 			<body className={`${inter.className} antialiased min-h-screen bg-background text-foreground`}>
-				<SpeedInsights />
 				<AuthProvider>
 					<div id="root">
 						{children}
