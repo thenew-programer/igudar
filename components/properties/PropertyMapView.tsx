@@ -11,8 +11,8 @@ interface PropertyMapViewProps {
 
 export const PropertyMapView: React.FC<PropertyMapViewProps> = ({ property }) => {
   const getMapUrl = () => {
-    const query = encodeURIComponent(`${property.location}, ${property.city}, ${property.region}, Morocco`);
-    return `https://www.openstreetmap.org/export/embed.html?bbox=-8.0,31.0,-1.0,36.0&layer=mapnik&marker=${encodeURIComponent(property.city)}&zoom=12`;
+    const query = encodeURIComponent(`${property.city}`);
+    return `https://www.openstreetmap.org/export/embed.html?bbox=-8.0,31.0,-1.0,36.0&layer=mapnik&marker=${query}&zoom=12`;
   };
 
   const getGoogleMapsUrl = () => {

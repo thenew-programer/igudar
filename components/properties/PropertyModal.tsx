@@ -56,7 +56,6 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
 					setError(result.error || 'Property not found');
 				}
 
-				// If user is logged in, fetch their ownership percentage for this property
 				if (user?.id) {
 					const ownershipResult = await InvestmentService.getUserOwnershipPercentageForProperty(
 						user.id,
@@ -83,7 +82,6 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
 		onClose();
 	};
 
-	// Always provide a title for accessibility
 	const getDialogTitle = () => {
 		if (loading) return 'Loading Property Details';
 		if (error) return 'Property Error';
