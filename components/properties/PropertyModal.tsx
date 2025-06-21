@@ -123,7 +123,7 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
 											<h3 className="font-semibold mb-2">Error Loading Property</h3>
 											<p className="mb-4">{error}</p>
 											<Button
-												// onClick={() => window.location.reload()}
+												onClick={handleClose}
 												variant="outline"
 												className="mr-2"
 											>

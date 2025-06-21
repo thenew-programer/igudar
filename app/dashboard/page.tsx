@@ -52,9 +52,6 @@ export default function DashboardPage() {
 					<h1 className="text-2xl md:text-3xl font-bold text-igudar-text">
 						Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || 'Investor'}!
 					</h1>
-					<p className="text-sm md:text-base text-igudar-text-secondary">
-						Here's an overview of your real estate investment portfolio
-					</p>
 				</div>
 			</div>
 			<StatsCards />

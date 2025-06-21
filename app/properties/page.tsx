@@ -185,11 +185,8 @@ export default function PropertiesPage() {
 			{/* Header */}
 			<div className="mb-8">
 				<h1 className="text-3xl md:text-4xl font-bold text-igudar-text mb-2">
-					Property Marketplace
+					Properties
 				</h1>
-				<p className="text-lg text-igudar-text-secondary">
-					Discover premium real estate investment opportunities across Morocco
-				</p>
 			</div>
 
 			{/* Search and Filter Controls */}

@@ -8,7 +8,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   TrendingUp, 
-  TrendingDown, 
   Calendar,
   BarChart3,
   PieChart,
@@ -66,126 +65,195 @@ export const InvestmentChart: React.FC = () => {
   const totalValue = portfolioBreakdown.reduce((sum, item) => sum + item.value, 0);
   const currentGrowth = performanceData.length > 0 ? performanceData[performanceData.length - 1]?.growth || 0 : 0;
 
-  const renderPerformanceChart = () => {
-    if (performanceData.length === 0) {
-      return (
-        <div className="space-y-6">
-          <div className="text-center py-8">
-            <TrendingUp className="h-12 w-12 text-igudar-primary/30 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-igudar-text mb-2">No Performance Data</h3>
-            <p className="text-igudar-text-muted">Start investing to see your portfolio performance over time.</p>
-          </div>
-        </div>
-      );
-    }
-
+const renderPerformanceChart = () => {
+  if (performanceData.length === 0) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-2xl font-bold text-igudar-text">
-              {totalValue.toLocaleString()} MAD
-            </h3>
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4 text-green-600" />
-              <span className="text-sm text-green-600 font-medium">
-                +{currentGrowth}% this month
-              </span>
-            </div>
+        <div className="text-center py-8">
+          <TrendingUp className="h-12 w-12 text-igudar-primary/30 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-igudar-text mb-2">No Performance Data</h3>
+          <p className="text-igudar-text-muted">Start investing to see your ROI evolution over time.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-2xl font-bold text-igudar-text">
+            {totalValue.toLocaleString()} MAD
+          </h3>
+          <div className="flex items-center space-x-2">
+            <TrendingUp className="h-4 w-4 text-green-600" />
+            <span className="text-sm text-green-600 font-medium">
+              +{currentGrowth}% ROI this month
+            </span>
           </div>
-          <Badge className="bg-green-100 text-green-800 border-green-200">
-            Portfolio Growing
-          </Badge>
+        </div>
+        <Badge className="bg-green-100 text-green-800 border-green-200">
+          ROI Growing
+        </Badge>
+      </div>
+
+      {/* Enhanced Line Chart Visualization */}
+      <div className="space-y-4">
+        <div className="flex justify-between text-xs text-igudar-text-muted">
+          <span>ROI Evolution Over Time</span>
+          <span>Last 8 Months</span>
         </div>
 
-        {/* Enhanced Chart Visualization */}
-        <div className="space-y-4">
-          <div className="flex justify-between text-xs text-igudar-text-muted">
-            <span>Performance Over Time</span>
-            <span>Last 8 Months</span>
-          </div>
-          
-          {/* Chart Container with Grid */}
-          <div className="relative bg-gradient-to-br from-igudar-primary/5 to-transparent rounded-lg p-4">
-            {/* Grid Lines */}
-            <div className="absolute inset-4 grid grid-cols-8 gap-1">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="border-r border-igudar-primary/10 last:border-r-0" />
-              ))}
-            </div>
-            
-            {/* Chart Bars */}
-            <div className="relative flex items-end space-x-1 h-40">
-              {performanceData.map((data, index) => {
-                const maxValue = Math.max(...performanceData.map(d => d.value));
-                const height = maxValue > 0 ? (data.value / maxValue) * 100 : 0;
-                const isHighest = data.value === maxValue;
-                
-                return (
-                  <div key={data.month} className="flex-1 flex flex-col items-center group">
-                    {/* Value Tooltip */}
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mb-2 bg-igudar-primary text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
-                      <div className="font-medium">{data.value.toLocaleString()} MAD</div>
-                      <div className="text-igudar-primary/80">+{data.growth}%</div>
-                    </div>
-                    
-                    {/* Bar */}
-                    <div 
-                      className={`w-full rounded-t-md transition-all duration-500 hover:shadow-lg ${
-                        isHighest 
-                          ? 'bg-gradient-to-t from-igudar-primary to-igudar-primary/80' 
-                          : 'bg-gradient-to-t from-igudar-primary/80 to-igudar-primary/60'
-                      } hover:from-igudar-primary hover:to-igudar-primary/90`}
-                      style={{ height: `${height}%` }}
-                    />
-                    
-                    {/* Month Label */}
-                    <span className="text-xs text-igudar-text-muted mt-2 font-medium">{data.month}</span>
-                    
-                    {/* Growth Indicator */}
-                    <div className={`text-xs mt-1 flex items-center ${
-                      data.growth > 7 ? 'text-green-600' : data.growth > 4 ? 'text-blue-600' : 'text-igudar-text-muted'
-                    }`}>
-                      <TrendingUp className="h-3 w-3 mr-1" />
-                      {data.growth}%
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+        {/* Chart Container with Grid */}
+        <div className="relative bg-gradient-to-br from-igudar-primary/5 to-transparent rounded-lg p-6">
+          {/* Horizontal Grid Lines */}
+          <div className="absolute inset-6 grid grid-rows-5 gap-1">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="border-b border-igudar-primary/10 last:border-b-0" />
+            ))}
           </div>
 
-          {/* Chart Statistics */}
-          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
-            <div className="text-center">
-              <div className="text-sm text-igudar-text-muted">Avg Growth</div>
-              <div className="text-lg font-semibold text-igudar-text">
-                {performanceData.length > 0 
-                  ? (performanceData.reduce((sum, d) => sum + d.growth, 0) / performanceData.length).toFixed(1)
-                  : '0'
-                }%
-              </div>
+          {/* Vertical Grid Lines */}
+          <div className="absolute inset-6 grid grid-cols-8 gap-1">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="border-r border-igudar-primary/10 last:border-r-0" />
+            ))}
+          </div>
+
+          {/* Line Chart */}
+          <div className="relative h-40">
+            <svg className="w-full h-full" viewBox="0 0 400 160" preserveAspectRatio="none">
+              {/* Calculate points for the line */}
+              {(() => {
+                const maxROI = Math.max(...performanceData.map(d => d.growth));
+                const minROI = Math.min(...performanceData.map(d => d.growth));
+                const roiRange = maxROI - minROI || 1;
+                const padding = 20;
+
+                const points = performanceData.map((data, index) => {
+                  const x = padding + (index * (400 - 2 * padding)) / (performanceData.length - 1);
+                  const y = 160 - padding - ((data.growth - minROI) / roiRange) * (160 - 2 * padding);
+                  return { x, y, growth: data.growth };
+                });
+
+                const pathData = points.map((point, index) => 
+                  `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`
+                ).join(' ');
+
+                return (
+                  <>
+                    {/* Gradient Fill Area */}
+                    <defs>
+                      <linearGradient id="roiGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="rgb(var(--igudar-primary))" stopOpacity="0.3" />
+                        <stop offset="100%" stopColor="rgb(var(--igudar-primary))" stopOpacity="0.05" />
+                      </linearGradient>
+                    </defs>
+                    
+                    {/* Fill area under the line */}
+                    <path
+                      d={`${pathData} L ${points[points.length - 1].x} 160 L ${points[0].x} 160 Z`}
+                      fill="url(#roiGradient)"
+                      className="transition-all duration-500"
+                    />
+                    
+                    {/* Main line */}
+                    <path
+                      d={pathData}
+                      fill="none"
+                      stroke="rgb(var(--igudar-primary))"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="filter drop-shadow-sm"
+                    />
+                    
+                    {/* Data points */}
+                    {points.map((point, index) => (
+                      <g key={index}>
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r="5"
+                          fill="white"
+                          stroke="rgb(var(--igudar-primary))"
+                          strokeWidth="3"
+                          className="transition-all duration-200 hover:r-7 hover:stroke-width-4 filter drop-shadow-sm"
+                        />
+                        {/* Hover tooltip circle */}
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r="12"
+                          fill="transparent"
+                          className="cursor-pointer hover:fill-igudar-primary/10"
+                        />
+                      </g>
+                    ))}
+                  </>
+                );
+              })()}
+            </svg>
+            
+            {/* Data Point Labels */}
+            <div className="absolute inset-0 flex items-end justify-between px-5 pb-4">
+              {performanceData.map((data, index) => (
+                <div key={data.month} className="flex flex-col items-center group">
+                  {/* Hover Tooltip */}
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mb-2 bg-igudar-primary text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap transform -translate-y-16">
+                    <div className="font-medium">{data.value.toLocaleString()} MAD</div>
+                    <div className="text-igudar-primary/80">ROI: +{data.growth}%</div>
+                  </div>
+                  
+                  {/* Month Label */}
+                  <span className="text-xs text-igudar-text-muted font-medium">{data.month}</span>
+                  
+                  {/* ROI Value */}
+                  <div className={`text-xs mt-1 flex items-center font-semibold ${
+                    data.growth > 7 ? 'text-green-600' : data.growth > 4 ? 'text-blue-600' : 'text-igudar-text-muted'
+                  }`}>
+                    {data.growth > 0 ? '+' : ''}{data.growth}%
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="text-center">
-              <div className="text-sm text-igudar-text-muted">Best Month</div>
-              <div className="text-lg font-semibold text-green-600">
-                +{performanceData.length > 0 ? Math.max(...performanceData.map(d => d.growth)) : 0}%
-              </div>
+          </div>
+        </div>
+
+        {/* Chart Statistics */}
+        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+          <div className="text-center">
+            <div className="text-sm text-igudar-text-muted">Avg ROI</div>
+            <div className="text-lg font-semibold text-igudar-text">
+              {performanceData.length > 0 
+                ? (performanceData.reduce((sum, d) => sum + d.growth, 0) / performanceData.length).toFixed(1)
+                : '0'
+              }%
             </div>
-            <div className="text-center">
-              <div className="text-sm text-igudar-text-muted">Total Growth</div>
-              <div className="text-lg font-semibold text-igudar-primary">
-                +{performanceData.length > 1 
-                  ? ((performanceData[performanceData.length - 1].value - performanceData[0].value) / Math.max(performanceData[0].value, 1) * 100).toFixed(1)
-                  : '0'
-                }%
-              </div>
+          </div>
+          <div className="text-center">
+            <div className="text-sm text-igudar-text-muted">Peak ROI</div>
+            <div className="text-lg font-semibold text-green-600">
+              +{performanceData.length > 0 ? Math.max(...performanceData.map(d => d.growth)) : 0}%
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-sm text-igudar-text-muted">ROI Trend</div>
+            <div className="text-lg font-semibold text-igudar-primary">
+              {performanceData.length > 1 ? (
+                performanceData[performanceData.length - 1].growth > performanceData[0].growth ? '↗' : '↘'
+              ) : '→'} 
+              {performanceData.length > 1
+                ? `${(performanceData[performanceData.length - 1].growth - performanceData[0].growth).toFixed(1)}%`
+                : '0%'
+              }
             </div>
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   const renderPortfolioBreakdown = () => {
     if (portfolioBreakdown.length === 0) {

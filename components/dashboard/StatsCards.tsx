@@ -6,11 +6,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
 	TrendingUp,
-	TrendingDown,
 	DollarSign,
 	Building2,
 	PieChart,
-	Target,
 	ArrowUpRight,
 	ArrowDownRight
 } from 'lucide-react';
@@ -68,7 +66,7 @@ export const StatsCards: React.FC = () => {
 			if (user?.id) {
 				fetchStats();
 			}
-		}, 30000);
+		}, 300000);
 
 		return () => clearInterval(interval);
 	}, [user?.id]);
@@ -119,8 +117,8 @@ export const StatsCards: React.FC = () => {
 				description: 'Current total value of your portfolio'
 			},
 			{
-				title: 'Total Ownership',
-				value: `${data.total_percentage?.toFixed(1) || '0.00'}%`,
+				title: 'Total ROI',
+				value: `${data.roi_percentage?.toFixed(1) || '0.00'}%`,
 				change: data.total_percentage > 0 ? `${data.total_properties} properties` : '0 properties',
 				changeType: 'positive',
 				icon: PieChart,
@@ -129,7 +127,6 @@ export const StatsCards: React.FC = () => {
 		];
 	};
 
-	// Loading state
 	if (loading) {
 		return (
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -150,7 +147,6 @@ export const StatsCards: React.FC = () => {
 		);
 	}
 
-	// Error state
 	if (error) {
 		return (
 			<Alert variant="destructive">
@@ -187,12 +183,12 @@ export const StatsCards: React.FC = () => {
 				description: 'Your portfolio value will appear here'
 			},
 			{
-				title: 'Total Ownership',
-				value: '0%',
+				title: 'Total ROI',
+				value: '0.00%',
 				change: '0 properties',
 				changeType: 'positive',
 				icon: PieChart,
-				description: 'Total ownership percentage across all properties'
+				description: 'Total ROI percentage across all properties'
 			},
 		];
 

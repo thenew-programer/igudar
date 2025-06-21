@@ -63,7 +63,7 @@ export const QuickActions: React.FC = () => {
       id: 'performance',
       title: 'Performance Report',
       icon: TrendingUp,
-      href: '/reports'
+      href: '/portfolio'
     },
     {
       id: 'documents',
