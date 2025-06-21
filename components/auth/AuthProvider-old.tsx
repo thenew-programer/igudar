@@ -31,18 +31,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [userProfile, setUserProfile] = useState<DatabaseUser | null>(null);
 	const [loading, setLoading] = useState(true);
-	// Add hydration safety
-	const [isHydrated, setIsHydrated] = useState(false);
 
-	// Ensure hydration safety
-	useEffect(() => {
-		setIsHydrated(true);
-	}, []);
 
 	useEffect(() => {
-		// Don't run auth logic until hydrated
-		if (!isHydrated) return;
-
 		let isMounted = true;
 
 		const initializeAuth = async () => {
@@ -144,11 +135,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 			isMounted = false;
 			subscription.unsubscribe();
 		};
-	}, [isHydrated]); // Add isHydrated as dependency
+	}, []);
 
 	useEffect(() => {
-		if (!isHydrated) return;
-
 		const handleVisibilityChange = async () => {
 			if (document.visibilityState === 'visible' && user) {
 				console.log('Tab is visible, refreshing session...');
@@ -165,7 +154,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		return () => {
 			document.removeEventListener('visibilitychange', handleVisibilityChange);
 		};
-	}, [user, isHydrated]);
+	}, [user]);
 
 	const handleSignOut = async () => {
 		try {
@@ -188,18 +177,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	const value: AuthContextType = {
 		user,
 		userProfile,
-		loading: loading || !isHydrated, // Keep loading until hydrated
+		loading,
 		signOut: handleSignOut,
 	};
-
-	// Show loading state until hydrated
-	if (!isHydrated) {
-		return (
-			<AuthContext.Provider value={value}>
-				{children}
-			</AuthContext.Provider>
-		);
-	}
 
 	return (
 		<AuthContext.Provider value={value}>
