@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { formatPrice } from '@/lib/properties';
+import { RadioGroup } from '@/components/ui/radio-group';
 
 interface InvestmentModalProps {
 	property: Property | null;
@@ -42,6 +43,7 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState(false);
 	const [step, setStep] = useState<'calculate' | 'confirm' | 'payment'>('calculate');
+	const [paymentMethod, setPaymentMethod] = useState<'bank' | 'card' | 'processor'>('card');
 
 	// Set prefilled amount when modal opens
 	useEffect(() => {
@@ -194,6 +196,46 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
 					/>
 					<div className="text-xs text-igudar-text-muted">
 						Remaining funding: {formatPrice(remainingFundingMAD)}
+					</div>
+				</div>
+
+				{/* Payment Method Choice */}
+				<div className="space-y-2">
+					<Label className="text-sm font-medium">Payment Method</Label>
+					<div className="flex flex-col gap-2">
+						<label className="flex items-center gap-2 cursor-pointer">
+							<input
+								type="radio"
+								name="payment-method"
+								value="bank"
+								checked={paymentMethod === 'bank'}
+								onChange={() => setPaymentMethod('bank')}
+								className="accent-igudar-primary"
+							/>
+							<span className="text-sm">Bank Transfer</span>
+						</label>
+						<label className="flex items-center gap-2 cursor-pointer">
+							<input
+								type="radio"
+								name="payment-method"
+								value="card"
+								checked={paymentMethod === 'card'}
+								onChange={() => setPaymentMethod('card')}
+								className="accent-igudar-primary"
+							/>
+							<span className="text-sm">Credit/Debit Card</span>
+						</label>
+						<label className="flex items-center gap-2 cursor-pointer">
+							<input
+								type="radio"
+								name="payment-method"
+								value="processor"
+								checked={paymentMethod === 'processor'}
+								onChange={() => setPaymentMethod('processor')}
+								className="accent-igudar-primary"
+							/>
+							<span className="text-sm">Payment Processor <span className="text-xs text-igudar-text-muted">(Cash Plus, Wafa Cash, Barid Cash, etc)</span></span>
+						</label>
 					</div>
 				</div>
 

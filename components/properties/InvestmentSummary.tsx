@@ -71,8 +71,8 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
   const handleAmountChange = (value: string) => {
     // Only allow numbers and decimal point
     const sanitizedValue = value.replace(/[^0-9.]/g, '');
-    setInvestmentAmount(sanitizedValue);
-    calculateInvestment(sanitizedValue);
+    setInvestmentAmount(sanititizedValue);
+    calculateInvestment(sanititizedValue);
   };
 
   // Calculate days remaining
@@ -165,8 +165,8 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
             Investment Summary
           </CardTitle>
         </CardHeader>
-        
-        <CardContent className="space-y-8 px-6 pb-6 pt-2">
+        {/* Make CardContent scrollable with a max height */}
+        <CardContent className="space-y-8 px-6 pb-6 pt-2 max-h-[80vh] overflow-y-auto">
           {/* Current Ownership Display */}
           {userOwnershipPercentage > 0 && (
             <div className="p-4 bg-igudar-primary/10 rounded-xl border border-igudar-primary/20 text-center mb-2">
@@ -239,12 +239,13 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
               </div>
               <div className="text-xl font-bold text-green-700">{formatPrice(minInvestmentMAD)}</div>
             </div>
+            {/* Replace redundant Min Investment with Rental Yield */}
             <div className="flex flex-col items-center p-4 bg-blue-50 rounded-xl border border-blue-200 shadow-sm">
               <div className="flex items-center gap-1 text-blue-600 mb-1">
-                <PieChart className="h-4 w-4" />
-                <span className="text-xs font-medium">Min Investment</span>
+                <BarChart3 className="h-4 w-4" />
+                <span className="text-xs font-medium">Rental Yield</span>
               </div>
-              <div className="text-base font-bold text-blue-700">{formatPrice(minInvestmentMAD)}</div>
+              <div className="text-base font-bold text-blue-700">{property.rental_yield}%</div>
             </div>
             <div className="flex flex-col items-center p-4 bg-purple-50 rounded-xl border border-purple-200 shadow-sm">
               <div className="flex items-center gap-1 text-purple-600 mb-1">
