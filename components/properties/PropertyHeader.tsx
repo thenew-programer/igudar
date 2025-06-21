@@ -5,8 +5,7 @@ import { useState } from 'react';
 import { Property, PropertyStatus, PropertyType } from '@/types/property';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { InvestmentModal } from './InvestmentModal';
 import {
 	MapPin,
@@ -18,12 +17,8 @@ import {
 	Home,
 	Factory,
 	Hotel,
-	AlertTriangle,
-	ShieldCheck,
 	Landmark,
 	Building,
-	Copy,
-	Check
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { formatPrice } from '@/lib/properties';
@@ -37,7 +32,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 	const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
 	const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 	const [isSaved, setIsSaved] = useState(false);
-	const [copied, setCopied] = useState(false);
 	const [saving, setSaving] = useState(false);
 
 	const getPropertyTypeIcon = (type: PropertyType) => {
@@ -74,32 +68,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 		}
 	};
 
-	const getRiskColor = (risk?: 'low' | 'medium' | 'high'): string => {
-		switch (risk) {
-			case 'low':
-				return 'bg-green-100 text-green-800 border-green-200';
-			case 'medium':
-				return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-			case 'high':
-				return 'bg-red-100 text-red-800 border-red-200';
-			default:
-				return 'bg-gray-100 text-gray-800 border-gray-200';
-		}
-	};
-
-	const getRiskIcon = (risk?: 'low' | 'medium' | 'high') => {
-		switch (risk) {
-			case 'low':
-				return ShieldCheck;
-			case 'medium':
-				return TrendingUp;
-			case 'high':
-				return AlertTriangle;
-			default:
-				return TrendingUp;
-		}
-	};
-
 	const getDaysRemaining = (): number => {
 		const deadline = new Date(property.funding_deadline);
 		const now = new Date();
@@ -109,7 +77,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 	};
 
 	const PropertyTypeIcon = getPropertyTypeIcon(property.property_type);
-	const RiskIcon = getRiskIcon(property.risk_assessment);
 	const daysRemaining = getDaysRemaining();
 
 	const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/properties/${property.id}` : '';
@@ -136,16 +103,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 			console.error('Error saving property:', error);
 		} finally {
 			setSaving(false);
-		}
-	};
-
-	const handleCopyLink = async () => {
-		try {
-			await navigator.clipboard.writeText(shareUrl);
-			setCopied(true);
-			setTimeout(() => setCopied(false), 2000);
-		} catch (error) {
-			console.error('Failed to copy link:', error);
 		}
 	};
 
@@ -192,19 +149,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 						{daysRemaining > 0 ? `${daysRemaining} days left` : 'Funding ended'}
 					</Badge>
 
-					{/* Risk Assessment Badge */}
-					<Badge 
-						variant="outline" 
-						className={`${getRiskColor(property.risk_assessment)} px-3.5 py-1.5 font-medium shadow-sm`}
-					>
-						<RiskIcon className="mr-2 h-4 w-4" />
-						<span className="font-semibold">
-							{property.risk_assessment 
-								? `${property.risk_assessment.charAt(0).toUpperCase() + property.risk_assessment.slice(1)} Risk` 
-								: 'Unknown Risk'
-							}
-						</span>
-					</Badge>
 				</div>
 
 				{/* Key Metrics Row */}
@@ -271,40 +215,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 								Share
 							</Button>
 						</DialogTrigger>
-						<DialogContent className="max-w-md">
-							<DialogHeader>
-								<DialogTitle>Share Property</DialogTitle>
-							</DialogHeader>
-							<div className="space-y-4">
-								<p className="text-sm text-igudar-text-secondary">
-									Share this property with others by copying the link below:
-								</p>
-								<div className="flex items-center space-x-2">
-									<Input
-										value={shareUrl}
-										readOnly
-										className="flex-1"
-									/>
-									<Button
-										onClick={handleCopyLink}
-										size="sm"
-										className="bg-igudar-primary hover:bg-igudar-primary/90 text-white"
-									>
-										{copied ? (
-											<>
-												<Check className="h-4 w-4 mr-1" />
-												Copied
-											</>
-										) : (
-											<>
-												<Copy className="h-4 w-4 mr-1" />
-												Copy
-											</>
-										)}
-									</Button>
-								</div>
-							</div>
-						</DialogContent>
 					</Dialog>
 				</div>
 			</div>

@@ -68,20 +68,6 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
     }
   };
 
-  // Get risk assessment icon
-  const getRiskIcon = (risk?: 'low' | 'medium' | 'high') => {
-    switch (risk) {
-      case 'low':
-        return ShieldCheck;
-      case 'medium':
-        return TrendingUp;
-      case 'high':
-        return AlertTriangle;
-      default:
-        return TrendingUp;
-    }
-  };
-
   // Calculate days remaining
   const getDaysRemaining = (): number => {
     const deadline = new Date(property.funding_deadline);
@@ -92,7 +78,6 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   };
 
   const PropertyTypeIcon = getPropertyTypeIcon(property.property_type);
-  const RiskIcon = getRiskIcon(property.risk_assessment);
   const daysRemaining = getDaysRemaining();
 
   // Convert prices from cents to MAD for display
