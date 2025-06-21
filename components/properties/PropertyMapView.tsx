@@ -10,7 +10,6 @@ interface PropertyMapViewProps {
 }
 
 export const PropertyMapView: React.FC<PropertyMapViewProps> = ({ property }) => {
-  // Generate a map URL for the property location
   const getMapUrl = () => {
     const query = encodeURIComponent(`${property.location}, ${property.city}, ${property.region}, Morocco`);
     return `https://www.openstreetmap.org/export/embed.html?bbox=-8.0,31.0,-1.0,36.0&layer=mapnik&marker=${encodeURIComponent(property.city)}&zoom=12`;
@@ -31,7 +30,6 @@ export const PropertyMapView: React.FC<PropertyMapViewProps> = ({ property }) =>
       </CardHeader>
       
       <CardContent className="space-y-4">
-        {/* Location Details */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-sm text-igudar-text-secondary">Address</span>
@@ -47,7 +45,6 @@ export const PropertyMapView: React.FC<PropertyMapViewProps> = ({ property }) =>
           </div>
         </div>
 
-        {/* Map Preview */}
         <div className="space-y-3">
           <h4 className="font-medium text-igudar-text">Map Preview</h4>
           <div className="relative bg-gradient-to-br from-igudar-primary/10 to-igudar-primary/5 rounded-lg overflow-hidden border border-border">

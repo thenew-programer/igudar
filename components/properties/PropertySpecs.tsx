@@ -15,7 +15,6 @@ import {
   Wrench,
   MapPin
 } from 'lucide-react';
-import { useAuth } from '@/components/auth/AuthProvider';
 import { formatPrice } from '@/lib/properties';
 
 interface PropertySpecsProps {
@@ -23,7 +22,6 @@ interface PropertySpecsProps {
 }
 
 export const PropertySpecs: React.FC<PropertySpecsProps> = ({ property }) => {
-  const { t } = useAuth();
 
   // Format area
   const formatArea = (sqm: number): string => {

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,7 +35,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 	const [error, setError] = useState<string | null>(null);
 	const searchParams = useSearchParams();
 
-	const router = useRouter();
 
 	const {
 		register,

@@ -7,7 +7,6 @@ import Link from 'next/link';
 export default function LoginPage() {
 	return (
 		<div className="min-h-screen min-w-full flex flex-col bg-white">
-			{/* Back to Home Button */}
 			<div className="absolute top-4 left-4 z-10">
 				<Link
 					href="https://meek-toffee-902e91.netlify.app"
@@ -18,7 +17,6 @@ export default function LoginPage() {
 				</Link>
 			</div>
 
-			{/* Centered Login Form */}
 			<div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md">
 					<Suspense fallback={<div className="text-center">Loading...</div>}>

@@ -7,8 +7,6 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { LanguageSelector } from '@/components/auth/LanguageSelector';
-import { NavigationItem } from '@/types/navigation';
 import Image from 'next/image';
 import {
 	LayoutDashboard,
@@ -42,7 +40,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 	const { user, signOut } = useAuth();
 	const [isCollapsed, setIsCollapsed] = useState(false);
 
-	// Load collapsed state from localStorage
 	useEffect(() => {
 		const savedState = localStorage.getItem('sidebar-collapsed');
 		if (savedState) {
@@ -50,13 +47,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 		}
 	}, []);
 
-	// Save collapsed state and emit event
 	const toggleCollapsed = () => {
 		const newState = !isCollapsed;
 		setIsCollapsed(newState);
 		localStorage.setItem('sidebar-collapsed', JSON.stringify(newState));
 
-		// Emit custom event for other components to listen
 		window.dispatchEvent(new CustomEvent('sidebar-toggle', {
 			detail: { collapsed: newState }
 		}));
@@ -70,7 +65,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 		}
 	};
 
-	// App navigation items
 	const appNavItems = [
 		{
 			name: 'Dashboard',

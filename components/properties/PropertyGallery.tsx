@@ -15,7 +15,6 @@ export const PropertyGallery: React.FC<PropertyGalleryProps> = ({ property }) =>
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Combine main image with additional images
   const allImages = [
     property.image_url,
     ...(property.images || [])

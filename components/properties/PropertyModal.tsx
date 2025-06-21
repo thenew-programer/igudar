@@ -14,7 +14,7 @@ import { PropertyDetails } from './PropertyDetails';
 import { InvestmentSummary } from './InvestmentSummary';
 import { PropertySpecs } from './PropertySpecs';
 import { PropertyMapView } from './PropertyMapView';
-import { X, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/components/auth/AuthProvider';
 

@@ -17,7 +17,6 @@ import {
   ShieldCheck,
   Target
 } from 'lucide-react';
-import { useAuth } from '@/components/auth/AuthProvider';
 import { formatPrice } from '@/lib/properties';
 
 interface PropertyDetailsProps {
@@ -25,9 +24,6 @@ interface PropertyDetailsProps {
 }
 
 export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
-  const { t } = useAuth();
-
-  // Format date
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -36,7 +32,6 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
     });
   };
 
-  // Calculate investment period in years
   const getInvestmentPeriodYears = (): string => {
     const years = Math.floor(property.investment_period / 12);
     const months = property.investment_period % 12;
@@ -50,7 +45,6 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
     }
   };
 
-  // Get risk assessment color
   const getRiskColor = (risk?: 'low' | 'medium' | 'high'): string => {
     switch (risk) {
       case 'low':
@@ -64,7 +58,6 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
     }
   };
 
-  // Get risk assessment icon
   const getRiskIcon = (risk?: 'low' | 'medium' | 'high') => {
     switch (risk) {
       case 'low':
@@ -82,7 +75,6 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
 
   return (
     <div className="space-y-6">
-      {/* Property Description */}
       <Card>
         <CardHeader>
           <CardTitle className="text-igudar-text">Property Description</CardTitle>
@@ -94,13 +86,11 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
         </CardContent>
       </Card>
 
-      {/* Investment Details */}
       <Card>
         <CardHeader>
           <CardTitle className="text-igudar-text">Investment Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Financial Metrics Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -207,7 +197,6 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
             </div>
           </div>
 
-          {/* Additional Financial Details */}
           {(property.monthly_rent || property.maintenance_cost || property.property_tax) && (
             <>
               <Separator />
@@ -247,13 +236,11 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
         </CardContent>
       </Card>
 
-      {/* Location & Amenities */}
       <Card>
         <CardHeader>
           <CardTitle className="text-igudar-text">Location & Amenities</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Location */}
           <div>
             <div className="flex items-center text-igudar-text-secondary mb-2">
               <MapPin className="mr-2 h-4 w-4" />
@@ -264,7 +251,6 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
             </p>
           </div>
 
-          {/* Amenities */}
           {property.amenities && property.amenities.length > 0 && (
             <div>
               <h4 className="font-medium text-igudar-text mb-3">Property Amenities</h4>
@@ -282,7 +268,6 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) =>
             </div>
           )}
 
-          {/* Nearby Facilities */}
           {property.nearby_facilities && property.nearby_facilities.length > 0 && (
             <div>
               <h4 className="font-medium text-igudar-text mb-3">Nearby Facilities</h4>

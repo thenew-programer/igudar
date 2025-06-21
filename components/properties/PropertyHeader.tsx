@@ -40,7 +40,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 	const [copied, setCopied] = useState(false);
 	const [saving, setSaving] = useState(false);
 
-	// Get property type icon
 	const getPropertyTypeIcon = (type: PropertyType) => {
 		switch (type) {
 			case PropertyType.RESIDENTIAL:
@@ -60,7 +59,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 		}
 	};
 
-	// Get status color
 	const getStatusColor = (status: PropertyStatus): string => {
 		switch (status) {
 			case PropertyStatus.ACTIVE:
@@ -76,7 +74,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 		}
 	};
 
-	// Get risk assessment color
 	const getRiskColor = (risk?: 'low' | 'medium' | 'high'): string => {
 		switch (risk) {
 			case 'low':
@@ -90,7 +87,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 		}
 	};
 
-	// Get risk assessment icon
 	const getRiskIcon = (risk?: 'low' | 'medium' | 'high') => {
 		switch (risk) {
 			case 'low':
@@ -104,7 +100,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 		}
 	};
 
-	// Calculate days remaining
 	const getDaysRemaining = (): number => {
 		const deadline = new Date(property.funding_deadline);
 		const now = new Date();
@@ -117,7 +112,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({ property }) => {
 	const RiskIcon = getRiskIcon(property.risk_assessment);
 	const daysRemaining = getDaysRemaining();
 
-	// Generate share URL
 	const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/properties/${property.id}` : '';
 
 	const handleInvestNow = () => {
